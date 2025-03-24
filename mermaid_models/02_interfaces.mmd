@@ -1,0 +1,9 @@
+graph TD
+    User -->|Inputs| Frontend
+    Frontend -->|REST Calls| Backend
+    Backend --> DB[(PostgreSQL: Events)]
+    Backend --> BookingAPI[Booking.com API]
+    Backend --> FlightsAPI[WayAway / Travelpayouts API]
+    Frontend -->|Affiliate Link| Booking[Booking.com]
+    Frontend -->|Affiliate Link| WayAway[WayAway.io]
+    Frontend -->|Ticket Link| EventSite[Event Organizer Website]

@@ -1,0 +1,14 @@
+flowchart TD
+    A[User inputs Search Details] --> B[Filter Events by Industry & Date]
+    B --> C[Render Event Cards with Estimated Price]
+    C --> D[User selects Event]
+    
+    D --> E[Fetch Hotels via Booking.com API]
+    E --> F[Display 9 Hotels + Booking.com Link]
+    F --> G[User selects Hotel]
+
+    G --> H[Fetch Flights from WayAway API]
+    H --> I[Show 3 Arrival Options 1 to 3 days before]
+    I --> J[User selects Flight external link]
+
+    J --> K[Show Full Event Info + Ticket Link]

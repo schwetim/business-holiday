@@ -1,0 +1,15 @@
+flowchart TD
+    Start[User Search Input]
+    Start --> Events[Filter Events by Industry & Date]
+    Events --> DisplayEvents[Render Event Cards with Estimated Price]
+    DisplayEvents --> SelectEvent[User Selects Event]
+    
+    SelectEvent --> Hotels[Get Hotels from Booking.com API]
+    Hotels --> DisplayHotels[Show 9 Hotels + Link to Booking.com]
+    DisplayHotels --> SelectHotel[User Selects Hotel]
+
+    SelectHotel --> Flights[Fetch Flights from WayAway]
+    Flights --> DisplayFlights[Show 3 Options (1–3 days before)]
+    DisplayFlights --> SelectFlight[User Chooses & Clicks External Link]
+
+    SelectFlight --> EventInfo[Show Full Event Info + Ticket Link]
