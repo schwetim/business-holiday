@@ -28,7 +28,7 @@ Thumbs.db
 **/dist/
 **/build/
 
-# Prisma (optional)
+# Prisma
 prisma/dev.db
 
 # Vercel/Render

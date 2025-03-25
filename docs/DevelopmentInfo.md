@@ -10,7 +10,7 @@ This guide is for developers working on the MVP of the Business + Holiday Travel
 root/
 ├── frontend/         # Next.js + TailwindCSS
 ├── backend/          # Express + TypeScript API
-├── prisma/           # Database schema (optional)
+├── prisma/           # Database schema
 ├── .env              # Shared secrets for local dev
 ├── .github/workflows # CI/CD pipelines
 ```
