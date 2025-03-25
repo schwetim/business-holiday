@@ -1,0 +1,41 @@
+# .gitignore
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# dotenv files
+.env
+.env.*
+
+# Docker
+**/Dockerfile
+**/docker-compose.yml
+**/.docker/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+**/.next/
+**/dist/
+**/build/
+
+# Prisma (optional)
+prisma/dev.db
+
+# Vercel/Render
+.vercel
+.output
+
+# IDEs
+.vscode/
+.idea/
+*.swp
