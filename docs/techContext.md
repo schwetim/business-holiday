@@ -21,10 +21,22 @@
 
 - Separate `/frontend` and `/backend` folders
 - Environment Variables:
-  - API keys (Google Maps, Booking.com ID, WayAway token)
-  - Database connection (DATABASE_URL)
-  - CORS settings (FRONTEND_URL)
-- Local dev via Docker Compose
+  Frontend (.env.frontend):
+    - NEXT_PUBLIC_API_URL=http://localhost:5000
+    - NEXT_TELEMETRY_DISABLED=1
+    - NODE_ENV=development
+  Backend (.env.backend):
+    - DATABASE_URL
+    - PORT=5000
+    - CORS_ORIGIN=http://localhost:3000
+  External APIs:
+    - Google Maps API key
+    - Booking.com affiliate ID
+    - WayAway token
+- Local Development:
+  - Docker Compose for service orchestration
+  - Volume mounts for hot reloading
+  - Environment-specific configurations
 - Git-based deployment workflows (GitHub → Vercel / Render)
 
 ## 🚧 Technical Constraints
@@ -45,7 +57,13 @@
 
 ## 🔄 Development Workflow
 
-- Local development uses Docker Compose
+- Local development uses Docker Compose:
+  - Frontend container on port 3000
+  - Backend container on port 5000
+  - Database container on port 5432
+- Environment-specific configurations:
+  - Development: local services with hot reloading
+  - Production: optimized builds with environment variables
 - TypeScript compilation in development and production
 - Prisma migrations for database schema changes
 - Multi-stage Docker builds for production

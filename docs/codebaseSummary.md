@@ -5,8 +5,12 @@
 ### Frontend (`/frontend`)
 - Next.js application with TypeScript
 - TailwindCSS for styling
-- Pages structure for routing
-- Docker containerized
+- Pages structure for routing:
+  - Home page (search form)
+  - Events page (dynamic listing)
+  - Test environment page
+- Environment configuration via .env.frontend
+- Docker containerized with volume mounts
 
 ### Backend (`/backend`)
 - Express.js server with TypeScript
@@ -46,6 +50,10 @@
 - Implemented Prisma ORM with models
 - Added /api/events endpoint
 - Created production Dockerfile with multi-stage build
+- Set up frontend environment variables (NEXT_PUBLIC_API_URL)
+- Implemented frontend routing structure
+- Added API integration in events page
+- Created test environment page for debugging
 
 ## 👥 User Feedback Integration
 - No user feedback yet (pre-launch)

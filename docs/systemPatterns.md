@@ -15,14 +15,22 @@ A lightweight web platform using modern JAMstack principles:
 - Click tracking for affiliate analytics
 - Multi-stage Docker builds = optimized production images
 - Prisma for type-safe database access = reduced runtime errors
+- Environment-based configuration = flexible deployment options
 
 ## 🧰 Architecture Patterns
 - **Modular monolith**: Single repo, structured folders by domain (api, ui, db)
 - **RESTful API design**: Simple JSON contracts (/api/events)
 - **Static + dynamic hybrid**: Pre-rendered pages + API-interpolated content
 - **Incremental adoption**: Easy to replace/scale any part later
-- **Docker-first development**: Consistent environments across team
+- **Docker-first development**: 
+  - Consistent environments across team
+  - Volume mounts for hot reloading
+  - Environment-specific configurations
 - **Type-safe data layer**: Prisma schema as single source of truth
+- **Environment Configuration**:
+  - Service-specific .env files
+  - Public vs private variables separation
+  - Docker-compatible env management
 
 ## 🛡️ Principles Followed
 - Keep it simple (KISS)

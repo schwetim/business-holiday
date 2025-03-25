@@ -18,10 +18,21 @@ Internal development repository for the Business Holiday Booking platform - comb
 
 2. Set up environment variables:
    ```bash
-   cp .env.example .env.frontend
-   cp .env.example .env.backend
+   # Frontend environment setup
+   cp frontend/.env.example .env.frontend
+   
+   # Backend environment setup
+   cp backend/.env.example .env.backend
    ```
-   Edit both files with your local configuration.
+
+   Configure the environment files:
+   - `.env.frontend`:
+     ```
+     NEXT_PUBLIC_API_URL=http://localhost:5000  # Backend API URL
+     NEXT_TELEMETRY_DISABLED=1                  # Disable Next.js telemetry
+     NODE_ENV=development                       # Environment mode
+     ```
+   - `.env.backend` (documentation in backend/.env.example)
 
 3. Start the development environment:
    ```bash
@@ -85,6 +96,19 @@ business-holiday-booking/
 - Database → Supabase
 
 ## 🛠 Common Tasks
+
+### Environment Management
+```bash
+# Check frontend environment
+docker compose exec frontend env
+
+# Check backend environment
+docker compose exec backend env
+
+# Reload environment after changes
+docker compose down
+docker compose up --build
+```
 
 ### Database Migrations
 ```bash
