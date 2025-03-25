@@ -1,0 +1,63 @@
+# .clinerules - Cline project-wide configuration and execution rules
+
+[ENVIRONMENT]
+# All development and execution must happen inside Docker containers.
+use_docker = true
+
+# Never run installation commands on the host system (e.g. apt, brew, npm install globally).
+prohibit_host_installation = true
+
+# Cline must execute or simulate all commands using Docker CLI or docker-compose.
+command_prefix = docker-compose exec
+
+[DOCKER]
+# Define base services
+frontend_service = frontend
+backend_service = backend
+postgres_service = db
+
+# Define ports (for validation / testing)
+frontend_port = 3000
+backend_port = 5000
+postgres_port = 5432
+
+# Important development commands
+backend_shell = docker-compose exec backend sh
+frontend_shell = docker-compose exec frontend sh
+
+[FILESYSTEM]
+# All edits must respect Docker volume mounts (project folders must remain synchronized)
+respect_volume_mounts = true
+
+[DEPLOYMENT]
+# Frontend hosted on Vercel, backend on Render
+frontend_host = vercel
+backend_host = render
+
+[PRINCIPLES]
+# This project follows these high-level principles:
+- KISS (Keep It Simple, Stupid)
+- DRY (Don’t Repeat Yourself)
+- CI/CD first: test and build pipelines must run on every commit
+- Type safety over dynamic shortcuts
+- Environment variables must be stored in `.env` files and referenced securely
+- Code must be clean, minimal, and production-ready (even in MVP)
+
+[PROJECT SPECIFICS]
+# Main flow: Event → Hotel → Flight → Ticket
+primary_user_flow = event_to_ticket
+
+# Database is hosted remotely (Supabase), connected via `DATABASE_URL`
+database_provider = supabase
+orm_tool = prisma
+
+# Cline must understand step-based UI architecture (1–4 phases)
+use_ui_phases = true
+
+[CLI ENFORCEMENTS]
+# Always output results that respect the Docker structure and CI/CD flow
+force_dockerfile_compliance = true
+force_ci_compatibility = true
+
+# Never assume local Node/Next.js/Postgres is available on the host
+no_local_runtime_assumptions = true

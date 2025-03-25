@@ -1,4 +1,4 @@
-# .gitignore
+# .gitignore - Business Holiday Booking Platform
 
 # Node.js
 node_modules/
@@ -10,32 +10,65 @@ yarn-error.log
 .env
 .env.*
 
-# Docker
-**/Dockerfile
-**/docker-compose.yml
-**/.docker/
+# Docker - We want to track Docker files in version control
+.docker/data/
+.docker/logs/
 
-# Logs
+# Logs and debugging
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+debug/
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Build outputs
+# Build and output directories
 **/.next/
 **/dist/
 **/build/
+**/out/
+**/.output/
+coverage/
+.nyc_output/
 
-# Prisma
+# Database and ORM
 prisma/dev.db
+prisma/.env
+*.sqlite
+*.sqlite3
+postgres-data/
 
-# Vercel/Render
+# Deployment platforms
 .vercel
+.netlify
+.render
 .output
 
-# IDEs
-.vscode/
+# IDEs and editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
 .idea/
-*.swp
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -13,15 +13,18 @@
 
 - **Node.js + Express**: Lightweight REST API layer
 - **TypeScript**: For static typing and dev safety
-- **PostgreSQL**: Primary database (can be hosted via Supabase/Render/Fly.io)
-- **Prisma ORM**: Simplifies schema, migration, and querying
+- **PostgreSQL**: Primary database (hosted via Render)
+- **Prisma ORM**: Type-safe schema, migration, and querying
+- **Docker**: Multi-stage builds for development and production
 
 ## 🧪 Development Setup
 
-- Monorepo (optional) or separate `/frontend` and `/backend` folders
-- Environment Variables for:
+- Separate `/frontend` and `/backend` folders
+- Environment Variables:
   - API keys (Google Maps, Booking.com ID, WayAway token)
-- Local dev via Docker or native install
+  - Database connection (DATABASE_URL)
+  - CORS settings (FRONTEND_URL)
+- Local dev via Docker Compose
 - Git-based deployment workflows (GitHub → Vercel / Render)
 
 ## 🚧 Technical Constraints
@@ -36,7 +39,13 @@
 ## 🧱 Hosting Stack
 
 - **Frontend**: Vercel (auto-deploy from GitHub)
-- **Backend**: Render / Fly.io (Node app)
-- **Database**: Supabas&#x20;
+- **Backend**: Render (Node app with production Docker image)
+- **Database**: Render PostgreSQL (managed instance)
 - **Image Hosting**: Vercel asset pipeline or S3 (optional)
 
+## 🔄 Development Workflow
+
+- Local development uses Docker Compose
+- TypeScript compilation in development and production
+- Prisma migrations for database schema changes
+- Multi-stage Docker builds for production

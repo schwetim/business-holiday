@@ -1,0 +1,19 @@
+# backend/Dockerfile.dev
+FROM node:20-alpine AS dev
+
+WORKDIR /app
+
+# Install OpenSSL
+RUN apk add --no-cache openssl
+
+# Install ALL dependencies, including dev
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+# Use a named volume to persist node_modules (not bind-mount)
+VOLUME ["/app/node_modules"]
+
+EXPOSE 5000
+CMD ["npm", "run", "dev"]
