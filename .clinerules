@@ -42,6 +42,7 @@ backend_host = render
 - Type safety over dynamic shortcuts
 - Environment variables must be stored in `.env` files and referenced securely
 - Code must be clean, minimal, and production-ready (even in MVP)
+- Use 'docker compose' and never the old 'docker-compose' command
 
 [PROJECT SPECIFICS]
 # Main flow: Event → Hotel → Flight → Ticket

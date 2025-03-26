@@ -110,10 +110,37 @@ docker compose down
 docker compose up --build
 ```
 
-### Database Migrations
+### Database Management
 ```bash
-# TBD - Prisma commands will go here
+# Generate Prisma client
+docker compose exec backend npx prisma generate
+
+# Run migrations
+docker compose exec backend npx prisma migrate dev
+
+# Reset database (caution: deletes all data)
+docker compose exec backend npx prisma migrate reset
 ```
+
+### Auto-Test Data Import
+
+When running the backend in development mode, a CSV import script automatically runs on startup. This ensures your development database always has test data available.
+
+The import process:
+- Reads from `/backend/import/events.csv`
+- Only runs when `NODE_ENV=development`
+- Checks for duplicates using `externalId`
+- Skips existing events
+- Maps image paths automatically
+
+You can also manually trigger the import:
+```bash
+docker compose exec backend npm run import:dev-data
+```
+
+To skip the auto-import:
+- Set `NODE_ENV=production` in your environment
+- Or remove the import step from the `dev` script in `backend/package.json`
 
 ### Adding Dependencies
 ```bash

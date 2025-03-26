@@ -8,20 +8,36 @@ datasource db {
 }
 
 model Event {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String?
-  industry    String
-  location    String
-  latitude    Float?
-  longitude   Float?
-  startDate   DateTime  @map("start_date")
-  endDate     DateTime  @map("end_date")
-  websiteUrl  String?   @map("website_url")
-  ticketPrice Decimal?  @map("ticket_price") @db.Decimal(10,2)
-  createdAt   DateTime  @default(now()) @map("created_at")
-  clickLogs   ClickLog[]
-  bookings    Booking[]
+  id            Int       @id @default(autoincrement())
+  externalId    String?   @unique @map("external_id")
+  name          String
+  description   String?
+  industry      String
+  
+  // Address fields
+  country       String
+  city          String
+  zipCode       String    @map("zip_code")
+  street        String
+  streetNumber  String    @map("street_number")
+  
+  // Location display and coordinates
+  location      String    // e.g. "Munich, Germany"
+  latitude      Float?
+  longitude     Float?
+  
+  // Event details
+  startDate     DateTime  @map("start_date")
+  endDate       DateTime  @map("end_date")
+  websiteUrl    String?   @map("website_url")
+  ticketPrice   Decimal?  @map("ticket_price") @db.Decimal(10,2)
+  imagePath     String?   @map("image_path")
+  
+  // Metadata
+  createdAt     DateTime  @default(now()) @map("created_at")
+  // Relations
+  clickLogs     ClickLog[]
+  bookings      Booking[]
 
   @@map("events")
 }

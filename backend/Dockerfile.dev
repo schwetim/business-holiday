@@ -9,6 +9,7 @@ RUN apk add --no-cache openssl
 # Install ALL dependencies, including dev
 COPY package*.json ./
 RUN npm install
+RUN npx prisma generate
 
 COPY . .
 

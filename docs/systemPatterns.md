@@ -10,7 +10,8 @@ A lightweight web platform using modern JAMstack principles:
 ## 🧱 Key Technical Decisions
 - Use affiliate links for booking = no regulatory overhead
 - No authentication = lower complexity and faster development
-- Manual data for events = easy to control quality at launch
+- CSV-based event import = flexible data management
+- Automatic development data = consistent testing environment
 - Real-time API fetches for hotels/flights = always fresh data
 - Click tracking for affiliate analytics
 - Multi-stage Docker builds = optimized production images
@@ -31,6 +32,11 @@ A lightweight web platform using modern JAMstack principles:
   - Service-specific .env files
   - Public vs private variables separation
   - Docker-compatible env management
+- **Development Data Management**:
+  - Auto-import on startup in dev mode
+  - External ID tracking for deduplication
+  - Structured image path mapping
+  - Environment-aware data loading
 
 ## 🛡️ Principles Followed
 - Keep it simple (KISS)

@@ -17,11 +17,16 @@
 - RESTful API design (/api/events endpoint)
 - Docker containerized (dev and prod)
 - Prisma ORM with PostgreSQL
+- Auto-import script for development data
+- CSV-based event import with image mapping
 
 ### Database
 - PostgreSQL container
 - Prisma schema with models:
-  - Event (business events)
+  - Event (business events):
+    - Full address fields (country, city, etc.)
+    - Import support (externalId, imagePath)
+    - Geolocation data (latitude, longitude)
   - ClickLog (affiliate tracking)
   - Booking (reference logging)
 
@@ -54,6 +59,9 @@
 - Implemented frontend routing structure
 - Added API integration in events page
 - Created test environment page for debugging
+- Enhanced Event model with address and import fields
+- Added development auto-import functionality
+- Implemented CSV-based event import system
 
 ## 👥 User Feedback Integration
 - No user feedback yet (pre-launch)

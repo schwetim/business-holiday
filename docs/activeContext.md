@@ -29,9 +29,13 @@ We're building the Minimum Viable Product (MVP) with:
 ✅ Set up Prisma schema
 ✅ Configure database migrations
 ✅ Implement data models for:
-  - Events
+  - Events (with full address and import fields)
   - Click tracking
   - Bookings (reference only)
+✅ Implement CSV import functionality:
+  - Auto-import test data in development
+  - Support for external IDs and image paths
+  - Duplicate prevention via externalId
 
 ### 3. Feature Development
 

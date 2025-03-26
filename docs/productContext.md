@@ -13,7 +13,7 @@ This project closes that gap — without acting as a tour operator.
 - Travel planning is fragmented: flights, hotels, events are in separate places
 - Businesses struggle to justify “biz-leisure” trips without structured documentation
 
-## 🛠️ How It Should Work
+## �️ How It Should Work
 1. **User inputs** industry, departure airport, and date range
 2. Platform shows **matching events** with combined price estimates (event + hotel + flight)
 3. User selects a trip package (event + hotel + flight)

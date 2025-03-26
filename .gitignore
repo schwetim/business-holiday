@@ -1,5 +1,9 @@
 # .gitignore - Business Holiday Booking Platform
 
+# Docs
+docs/
+.clinerules
+
 # Node.js
 node_modules/
 npm-debug.log

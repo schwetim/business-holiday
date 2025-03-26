@@ -1,9 +1,20 @@
+import { execSync } from 'child_process';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 
 // Initialize express app
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Run Prisma migrations in development
+if (process.env.NODE_ENV === "development") {
+  console.log("🔄 Running Prisma migration to sync DB schema...");
+  try {
+    execSync("npx prisma migrate dev --name init", { stdio: "inherit" });
+  } catch (err) {
+    console.error("❌ Failed to migrate schema:", err);
+  }
+}
 
 // Middleware
 app.use(cors({
