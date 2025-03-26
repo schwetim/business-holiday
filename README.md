@@ -98,6 +98,12 @@ business-holiday-booking/
 ## 🛠 Common Tasks
 
 ### Environment Management
+
+**Critical Variables**
+- `NEXT_PUBLIC_API_URL`: Must be set to `http://backend:5000` in Docker environment
+  - Frontend uses this to communicate with backend API
+  - Defaults to `http://localhost:5000` for local development
+
 ```bash
 # Check frontend environment
 docker compose exec frontend env
@@ -132,6 +138,13 @@ The import process:
 - Checks for duplicates using `externalId`
 - Skips existing events
 - Maps image paths automatically
+- Includes region data (continent) for each event
+
+**Region Field Details:**
+- Required field in CSV (column name: "region")
+- Valid values: "Europe", "Asia", "North America", "South America", "Africa", "Oceania"
+- Used for filtering events by continent
+- Stored in database as plain text
 
 You can also manually trigger the import:
 ```bash

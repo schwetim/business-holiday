@@ -55,10 +55,14 @@
 - Implemented Prisma ORM with models
 - Added /api/events endpoint
 - Created production Dockerfile with multi-stage build
-- Set up frontend environment variables (NEXT_PUBLIC_API_URL)
-- Implemented frontend routing structure
+- Set up frontend environment variables (NEXT_PUBLIC_API_URL) with Docker networking configuration
+- Implemented frontend routing structure with HeroBanner
 - Added API integration in events page
 - Created test environment page for debugging
+- Implemented core UI components:
+  - HeroBanner with responsive design
+  - IndustrySelect with API integration
+  - SelectField reusable component
 - Enhanced Event model with address and import fields
 - Added development auto-import functionality
 - Implemented CSV-based event import system

@@ -1,21 +1,21 @@
-externalId,name,description,industry,country,city,zipCode,street,streetNumber,location,startDate,endDate,websiteUrl,ticketPrice,imageFileName
-evt001,CloudWorld,Cloud computing summit,IT,Portugal,Lisbon,1100-001,Av. da Liberdade,100,Lisbon,2025-06-10,2025-06-12,https://cloudworld.io,199.99,banner.jpg
-evt002,AdTechFest,Future of AdTech Marketing,Marketing,Germany,Berlin,10115,Invalidenstraße,117,Berlin,2025-07-01,2025-07-02,https://adtechfest.com,149.00,cover.jpg
-evt003,AutoDays,Mobility innovation fair,Automotive,Germany,Munich,80333,Brienner Str.,45,Munich,2025-08-11,2025-08-13,https://autodays.de,249.50,expo.jpg
-evt004,SeaTech Summit,Marine & Naval Engineering,Naval,Croatia,Split,21000,Obala Hrvatskog preporoda,3,Split,2025-09-05,2025-09-07,https://seatechsummit.com,175.00,ship.jpg
-evt005,DevHack Europe,Software engineering hackathon,IT,Netherlands,Amsterdam,1012WX,Prinsengracht,263,Amsterdam,2025-10-20,2025-10-21,https://devhack.eu,0.00,hack.jpg
-evt006,SmartRetail World,Future of Retail Tech,Commerce,UK,London,EC1A 1BB,High Holborn,88,London,2025-11-15,2025-11-17,https://smartretailworld.co.uk,99.00,retail.jpg
-evt007,GreenBuild Forum,Greener construction event,Engineering,Sweden,Stockholm,11435,Birger Jarlsgatan,18,Stockholm,2025-09-25,2025-09-27,https://greenbuild.se,159.00,build.jpg
-evt008,UX/UI Europe,Design systems & accessibility,Design,France,Paris,75003,Rue de Bretagne,52,Paris,2025-10-10,2025-10-12,https://uxui.eu,189.99,ux.jpg
-evt009,AeroConnect,Aviation & Aerospace Forum,Engineering,USA,Seattle,98101,1st Ave,150,Seattle,2025-11-01,2025-11-03,https://aeroconnect.org,399.00,flight.jpg
-evt010,MedTech Pulse,Future of Med Devices,Medical,Germany,Hamburg,20095,Spitalerstraße,22,Hamburg,2025-12-05,2025-12-07,https://medtechpulse.de,229.00,med.jpg
-evt011,FinNext Summit,FinTech & Crypto Innovations,Finance,Switzerland,Zürich,8001,Bahnhofstrasse,5,Zürich,2025-06-15,2025-06-17,https://finnext.io,249.90,fintech.jpg
-evt012,AgroTech Days,Agriculture and Agri-IoT,Agrotech,Spain,Valencia,46001,Carrer de Colom,33,Valencia,2025-08-20,2025-08-22,https://agrotechdays.es,89.00,farm.jpg
-evt013,LegalEdge Forum,Legal Tech and Ethics,Legal,Belgium,Brussels,1000,Boulevard Anspach,20,Brussels,2025-07-25,2025-07-26,https://legaledge.be,199.50,law.jpg
-evt014,LogiChain Expo,Logistics & SCM Innovation,Logistics,Netherlands,Rotterdam,3011,Westblaak,42,Rotterdam,2025-10-01,2025-10-03,https://logichain.nl,189.00,logi.jpg
-evt015,PropNext Europe,PropTech & Smart Living,Real Estate,Austria,Vienna,1010,Kärntner Straße,22,Vienna,2025-09-10,2025-09-12,https://propnext.eu,169.00,proptech.jpg
-evt016,FoodFuture Fest,FoodTech & Alt Proteins,FoodTech,Italy,Milan,20121,Via Dante,15,Milan,2025-11-20,2025-11-21,https://foodfuturefest.it,129.99,food.jpg
-evt017,EdTech Spark,Education Technology Trends,Education,Norway,Oslo,0155,Dronningens gate,10,Oslo,2025-12-01,2025-12-02,https://edtechspark.no,109.00,edu.jpg
-evt018,ArtSync,Art & NFT collaboration event,Creative,Portugal,Porto,4000-070,Rua de Santa Catarina,112,Porto,2025-09-18,2025-09-19,https://artsync.pt,89.90,art.jpg
-evt019,DeepDataConf,Big Data & ML Systems,IT,Poland,Warsaw,00-001,Marszałkowska,75,Warsaw,2025-07-14,2025-07-16,https://deepdata.pl,199.00,data.jpg
-evt020,GameForgeCon,Game Development and Publishing,Entertainment,Czech Republic,Prague,11000,Národní,23,Prague,2025-08-05,2025-08-07,https://gameforgecon.cz,79.00,gaming.jpg
+externalId,name,description,industry,country,city,region,zipCode,street,streetNumber,location,startDate,endDate,websiteUrl,ticketPrice,imageFileName
+evt001,CloudWorld,Cloud computing summit,IT,Portugal,Lisbon,Europe,1100-001,Av. da Liberdade,100,Lisbon,2025-06-10,2025-06-12,https://cloudworld.io,199.99,banner.jpg
+evt002,AdTechFest,Future of AdTech Marketing,Marketing,Germany,Berlin,Europe,10115,Invalidenstraße,117,Berlin,2025-07-01,2025-07-02,https://adtechfest.com,149.00,cover.jpg
+evt003,AutoDays,Mobility innovation fair,Automotive,Germany,Munich,Europe,80333,Brienner Str.,45,Munich,2025-08-11,2025-08-13,https://autodays.de,249.50,expo.jpg
+evt004,SeaTech Summit,Marine & Naval Engineering,Naval,Croatia,Split,Europe,21000,Obala Hrvatskog preporoda,3,Split,2025-09-05,2025-09-07,https://seatechsummit.com,175.00,ship.jpg
+evt005,DevHack Europe,Software engineering hackathon,IT,Netherlands,Amsterdam,Europe,1012WX,Prinsengracht,263,Amsterdam,2025-10-20,2025-10-21,https://devhack.eu,0.00,hack.jpg
+evt006,SmartRetail World,Future of Retail Tech,Commerce,UK,London,Europe,EC1A 1BB,High Holborn,88,London,2025-11-15,2025-11-17,https://smartretailworld.co.uk,99.00,retail.jpg
+evt007,GreenBuild Forum,Greener construction event,Engineering,Sweden,Stockholm,Europe,11435,Birger Jarlsgatan,18,Stockholm,2025-09-25,2025-09-27,https://greenbuild.se,159.00,build.jpg
+evt008,UX/UI Europe,Design systems & accessibility,Design,France,Paris,Europe,75003,Rue de Bretagne,52,Paris,2025-10-10,2025-10-12,https://uxui.eu,189.99,ux.jpg
+evt009,AeroConnect,Aviation & Aerospace Forum,Engineering,USA,Seattle,North America,98101,1st Ave,150,Seattle,2025-11-01,2025-11-03,https://aeroconnect.org,399.00,flight.jpg
+evt010,MedTech Pulse,Future of Med Devices,Medical,Germany,Hamburg,Europe,20095,Spitalerstraße,22,Hamburg,2025-12-05,2025-12-07,https://medtechpulse.de,229.00,med.jpg
+evt011,FinNext Summit,FinTech & Crypto Innovations,Finance,Switzerland,Zürich,Europe,8001,Bahnhofstrasse,5,Zürich,2025-06-15,2025-06-17,https://finnext.io,249.90,fintech.jpg
+evt012,AgroTech Days,Agriculture and Agri-IoT,Agrotech,Spain,Valencia,Europe,46001,Carrer de Colom,33,Valencia,2025-08-20,2025-08-22,https://agrotechdays.es,89.00,farm.jpg
+evt013,LegalEdge Forum,Legal Tech and Ethics,Legal,Belgium,Brussels,Europe,1000,Boulevard Anspach,20,Brussels,2025-07-25,2025-07-26,https://legaledge.be,199.50,law.jpg
+evt014,LogiChain Expo,Logistics & SCM Innovation,Logistics,Netherlands,Rotterdam,Europe,3011,Westblaak,42,Rotterdam,2025-10-01,2025-10-03,https://logichain.nl,189.00,logi.jpg
+evt015,PropNext Europe,PropTech & Smart Living,Real Estate,Austria,Vienna,Europe,1010,Kärntner Straße,22,Vienna,2025-09-10,2025-09-12,https://propnext.eu,169.00,proptech.jpg
+evt016,FoodFuture Fest,FoodTech & Alt Proteins,FoodTech,Italy,Milan,Europe,20121,Via Dante,15,Milan,2025-11-20,2025-11-21,https://foodfuturefest.it,129.99,food.jpg
+evt017,EdTech Spark,Education Technology Trends,Education,Norway,Oslo,Europe,0155,Dronningens gate,10,Oslo,2025-12-01,2025-12-02,https://edtechspark.no,109.00,edu.jpg
+evt018,ArtSync,Art & NFT collaboration event,Creative,Portugal,Porto,Europe,4000-070,Rua de Santa Catarina,112,Porto,2025-09-18,2025-09-19,https://artsync.pt,89.90,art.jpg
+evt019,DeepDataConf,Big Data & ML Systems,IT,Poland,Warsaw,Europe,00-001,Marszałkowska,75,Warsaw,2025-07-14,2025-07-16,https://deepdata.pl,199.00,data.jpg
+evt020,GameForgeCon,Game Development and Publishing,Entertainment,Czech Republic,Prague,Europe,11000,Národní,23,Prague,2025-08-05,2025-08-07,https://gameforgecon.cz,79.00,gaming.jpg

@@ -13,6 +13,7 @@ interface EventCsvRow {
   industry: string;
   country: string;
   city: string;
+  region: string;
   zipCode: string;
   street: string;
   streetNumber: string;
@@ -34,6 +35,7 @@ function validateRow(row: EventCsvRow, rowIndex: number): boolean {
     'industry',
     'country',
     'city',
+    'region',
     'zipCode',
     'street',
     'streetNumber',
@@ -125,6 +127,7 @@ async function runImport() {
               industry: row.industry,
               country: row.country,
               city: row.city,
+              region: row.region,
               zipCode: row.zipCode,
               street: row.street,
               streetNumber: row.streetNumber,

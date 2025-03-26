@@ -17,6 +17,7 @@ model Event {
   // Address fields
   country       String
   city          String
+  region String? @map("region")
   zipCode       String    @map("zip_code")
   street        String
   streetNumber  String    @map("street_number")

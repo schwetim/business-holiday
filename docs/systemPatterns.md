@@ -20,6 +20,7 @@ A lightweight web platform using modern JAMstack principles:
 
 ## 🧰 Architecture Patterns
 - **Modular monolith**: Single repo, structured folders by domain (api, ui, db)
+- **Component-based UI**: Reusable components (HeroBanner, SelectField, DestinationSelect)
 - **RESTful API design**: Simple JSON contracts (/api/events)
 - **Static + dynamic hybrid**: Pre-rendered pages + API-interpolated content
 - **Incremental adoption**: Easy to replace/scale any part later

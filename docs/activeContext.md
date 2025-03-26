@@ -17,12 +17,15 @@ We're building the Minimum Viable Product (MVP) with:
 ✅ Backend container running with Express
 ✅ Database container ready
 ✅ Set up initial API endpoints (/api/events)
-✅ Configure frontend environment (NEXT_PUBLIC_API_URL)
+✅ Configure frontend environment (NEXT_PUBLIC_API_URL) with proper Docker networking setup
 ✅ Set up frontend routing structure:
-  - Home page with search form
+  - Home page with search form and HeroBanner
   - Events listing page with API integration
   - Test environment page
-- Implement remaining UI components
+✅ Implement core UI components:
+  - HeroBanner with responsive design
+  - IndustrySelect with API integration
+  - SelectField reusable component
 
 ### 2. Data Layer
 
