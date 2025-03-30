@@ -1,20 +1,32 @@
 # backend/Dockerfile.dev
-FROM node:20-alpine AS dev
+FROM node:20-slim AS dev
 
 WORKDIR /app
 
-# Install OpenSSL
-RUN apk add --no-cache openssl
+# Install OpenSSL 1.1 and bash (OpenSSL 1.1 is required by Prisma)
+RUN echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y libssl1.1 bash openssl dos2unix && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install ALL dependencies, including dev
+# Install dependencies
 COPY package*.json ./
 RUN npm install
+
+# Generate Prisma Client
 RUN npx prisma generate
 
+# Copy entrypoint script first and make it executable
+COPY docker-entrypoint.sh .
+RUN dos2unix docker-entrypoint.sh && \
+    chmod +x docker-entrypoint.sh
+
+# Copy remaining source files
 COPY . .
 
-# Use a named volume to persist node_modules (not bind-mount)
+# Use a named volume for node_modules
 VOLUME ["/app/node_modules"]
 
 EXPOSE 5000
-CMD ["npm", "run", "dev"]
+
+ENTRYPOINT ["/bin/bash", "./docker-entrypoint.sh"]

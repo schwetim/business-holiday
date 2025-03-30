@@ -28,21 +28,48 @@ Internal development repository for the Business Holiday Booking platform - comb
    Configure the environment files:
    - `.env.frontend`:
      ```
-     NEXT_PUBLIC_API_URL=http://localhost:5000  # Backend API URL
-     NEXT_TELEMETRY_DISABLED=1                  # Disable Next.js telemetry
-     NODE_ENV=development                       # Environment mode
+     NEXT_TELEMETRY_DISABLED=1                # Disable Next.js telemetry
      ```
+   Note: 
+   - NODE_ENV is automatically set to "development" in docker-compose.dev.yml
+   - BACKEND_URL is set to "http://backend:5000" in docker-compose.dev.yml
+   - API requests are proxied through Next.js API routes in development
+   - In production, NEXT_PUBLIC_API_URL is set via Vercel environment variables
    - `.env.backend` (documentation in backend/.env.example)
 
 3. Start the development environment:
    ```bash
-   docker compose up --build
+   make updev
    ```
 
 4. Access the applications:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:5000
+   - Prisma Studio: http://localhost:5555
    - Database: localhost:5432
+
+## 🌐 Environment Separation
+
+The project maintains strict separation between development and production environments:
+
+### Development Environment
+- Uses `docker-compose.dev.yml`
+- Includes development tools (Prisma Studio, pgweb)
+- Local PostgreSQL database with volumes
+- Next.js API routes proxy requests to backend
+- Container-to-container communication
+- Hot reloading enabled
+- Started with `make updev` or `make rebuilddev`
+
+### Production Environment
+- Frontend deployed to Vercel
+  - Direct API calls to backend URL
+  - Environment variables managed in Vercel dashboard
+  - No proxy overhead
+- Backend deployed to Render
+  - Minimal Docker configuration
+  - Connects to Render PostgreSQL
+  - Environment variables managed in Render dashboard
 
 ## 🏗 Project Structure
 
@@ -50,25 +77,31 @@ Internal development repository for the Business Holiday Booking platform - comb
 business-holiday-booking/
 ├── frontend/               # Next.js frontend application
 │   ├── src/               # Source code
-│   ├── public/            # Static assets
-│   └── Dockerfile.dev     # Development Docker configuration
-├── backend/               # Express.js API server
-│   ├── src/               # Source code
-│   └── Dockerfile.dev     # Development Docker configuration
-├── docs/                  # Project documentation
-│   ├── activeContext.md   # Current development focus
-│   ├── productContext.md  # Product vision and goals
-│   ├── systemPatterns.md  # Architecture patterns
-│   └── techContext.md     # Technical specifications
-└── docker-compose.yml     # Container orchestration
+│   │   ├── components/    # React components
+│   │   ├── pages/        # Next.js pages
+│   │   │   └── api/      # API routes for development
+│   │   └── services/     # Shared services
+│   │       └── api.ts    # Centralized API service
+│   ├── public/           # Static assets
+│   └── Dockerfile.dev    # Development Docker configuration
+├── backend/              # Express.js API server
+│   ├── src/             # Source code
+│   └── Dockerfile.dev   # Development Docker configuration
+├── docs/                # Project documentation
+│   ├── activeContext.md  # Current development focus
+│   ├── productContext.md # Product vision and goals
+│   ├── systemPatterns.md # Architecture patterns
+│   └── techContext.md    # Technical specifications
+├── docker-compose.yml    # Production container config
+└── docker-compose.dev.yml # Development container config
 ```
 
 ## 📚 Documentation
 
 - [Product Context](docs/productContext.md) - Why this exists
-- [Active Context](docs/activeContext.md) - Current focus
-- [System Patterns](docs/systemPatterns.md) - Architecture
-- [Technical Context](docs/techContext.md) - Tech stack
+- [Active Context](docs/activeContext.md) - Current focus and recent changes
+- [System Patterns](docs/systemPatterns.md) - Architecture and API patterns
+- [Technical Context](docs/techContext.md) - Tech stack and environment setup
 - [Codebase Summary](docs/codebaseSummary.md) - Code overview
 
 ## 🔄 Development Workflow
@@ -97,23 +130,32 @@ business-holiday-booking/
 
 ## 🛠 Common Tasks
 
+### Troubleshooting
+
 ### Environment Management
 
 **Critical Variables**
-- `NEXT_PUBLIC_API_URL`: Must be set to `http://backend:5000` in Docker environment
-  - Frontend uses this to communicate with backend API
-  - Defaults to `http://localhost:5000` for local development
+- Development:
+  - `BACKEND_URL`: Set to `http://backend:5000` in docker-compose.dev.yml
+    - Used by Next.js API routes to proxy requests
+    - Container-to-container communication
+    - Automatic request proxying
+- Production:
+  - `NEXT_PUBLIC_API_URL`: Set in Vercel dashboard
+    - Direct API communication
+    - No proxy overhead
+    - Points to Render backend URL
 
 ```bash
-# Check frontend environment
-docker compose exec frontend env
+# Development commands
+make updev       # Start dev environment
+make downdev     # Stop dev environment
+make rebuilddev  # Rebuild dev environment
 
-# Check backend environment
-docker compose exec backend env
-
-# Reload environment after changes
-docker compose down
-docker compose up --build
+# Production-style commands
+make up          # Start production-like environment
+make down        # Stop production-like environment
+make rebuild     # Rebuild production-like environment
 ```
 
 ### Database Management
@@ -126,6 +168,9 @@ docker compose exec backend npx prisma migrate dev
 
 # Reset database (caution: deletes all data)
 docker compose exec backend npx prisma migrate reset
+
+# Access Prisma Studio (dev only)
+open http://localhost:5555
 ```
 
 ### Auto-Test Data Import

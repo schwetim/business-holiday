@@ -1,41 +1,20 @@
 ### docker-compose.yml
+version: '3.8'
 services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     env_file:
-      - .env.backend
-    depends_on:
-      - db
+      - .env.production
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     env_file:
       - .env.frontend
-
-  db:
-    image: postgres:15
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: travel_mvp
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:

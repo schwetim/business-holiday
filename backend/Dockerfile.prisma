@@ -1,0 +1,15 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+# Install OpenSSL and required tools
+RUN apt-get update && \
+    apt-get install -y openssl bash && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY package*.json ./
+RUN npm install && npx prisma generate
+
+COPY . .
+
+CMD ["npx", "prisma", "studio", "--port", "5555"]
