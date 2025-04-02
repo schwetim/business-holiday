@@ -2,6 +2,87 @@
 
 Internal development repository for the Business Holiday Booking platform - combining professional events with leisure travel opportunities.
 
+## 🗺️ Application Flow
+
+```mermaid
+graph TD
+    A[Event Search] --> B[Event Selection]
+    B --> C[Hotel Search]
+    C --> D[Flight Search]
+    D --> E[Booking]
+
+    subgraph Search Flow
+        A --> F[Industry Filter]
+        A --> G[Location Filter]
+        A --> H[Date Filter]
+    end
+
+    subgraph Event Details
+        B --> I[Basic Info]
+        B --> J[Expanded Details]
+        B --> K[Location Lock]
+    end
+
+    subgraph Booking Flow
+        E --> L[Hotel Booking]
+        E --> M[Flight Booking]
+        E --> N[Event Registration]
+    end
+```
+
+### Event Browsing
+- Event cards with basic information
+- Expandable details view:
+  - Full description
+  - Website URL
+  - Ticket pricing
+  - Location details
+
+### Event Selection
+- Location locking system
+- Automatic hotel search trigger
+- Progress tracking
+
+### Hotel Selection
+- Location-based filtering
+- Price range options
+- Booking.com integration
+- Availability checking
+
+### Flight Selection
+- Origin airport input
+- Date flexibility
+- WayAway integration
+- Price tracking
+
+## 🔌 External Integrations
+
+### Affiliate APIs
+- **Booking.com**
+  - Hotel search and pricing
+  - Real-time availability
+  - Commission tracking
+  - Deep linking system
+
+- **WayAway**
+  - Flight search API
+  - Price comparison
+  - Booking management
+  - Analytics integration
+
+### Content Management
+- **Strapi CMS**
+  - Event content management
+  - Media handling
+  - Dynamic updates
+  - API-first approach
+
+### Analytics
+- User flow tracking
+- Conversion monitoring
+- Affiliate link tracking
+- Performance metrics
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -145,6 +226,24 @@ business-holiday-booking/
     - Direct API communication
     - No proxy overhead
     - Points to Render backend URL
+
+**External API Keys**
+```bash
+# Booking.com Integration
+BOOKING_COM_AFFILIATE_ID=
+BOOKING_COM_API_KEY=
+
+# WayAway Integration
+WAYAWAY_PARTNER_ID=
+WAYAWAY_API_KEY=
+
+# CMS Integration
+STRAPI_API_TOKEN=
+
+# Analytics
+GA_MEASUREMENT_ID=
+CONVERSION_TRACKING_ID=
+```
 
 ```bash
 # Development commands

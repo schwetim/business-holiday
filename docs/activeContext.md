@@ -52,20 +52,90 @@ Current Focus:
   ✅ Industry selection with API integration
   - Region/location selection
   - Date range picker
-- Add event listing page
-- Integrate hotel suggestions
-- Add flight search functionality
-- Implement affiliate redirects
+
+Upcoming Features:
+
+#### 🗺️ Event Browsing & Selection
+- Event card components with:
+  - Basic info display
+  - Expandable details (description, websiteUrl, ticketPrice)
+  - Loading states and error handling
+- Event selection flow:
+  - Location locking mechanism
+  - Automatic navigation to hotel selection
+  - Progress tracking
+
+#### 🏨 Hotel Integration
+- Hotel selection interface:
+  - Location-based filtering
+  - Price range filters
+  - Booking.com API integration
+  - Loading and error states
+- Data requirements:
+  - Hotel availability API
+  - Price comparison endpoints
+  - Deep linking setup
+
+#### ✈️ Flight Integration
+- Flight search interface:
+  - Origin airport selection
+  - Date range picker
+  - WayAway API integration
+  - Price tracking
+- Data flow:
+  - Search parameters validation
+  - Real-time availability checks
+  - Price aggregation
+
+#### 📊 Analytics & Tracking
+- User flow tracking:
+  - Page views and interactions
+  - Conversion tracking
+  - Affiliate link clicks
+- Integration points:
+  - Google Analytics
+  - Custom event tracking
+  - Affiliate dashboards
+
+#### 🔌 External Integrations
+- Strapi CMS:
+  - Event content management
+  - Dynamic data updates
+  - Media handling
+- Affiliate APIs:
+  - Booking.com setup
+  - WayAway integration
+  - Commission tracking
+
+#### 🔐 Optional Enhancements
+- User authentication
+- Saved searches
+- Booking history
+- Price alerts
 
 ### 4. Testing + Launch
 
-- Write integration tests
-- Perform load testing
-- Set up monitoring
+- Write integration tests:
+  - User flow testing
+  - API integration tests
+  - Performance benchmarks
+- Perform load testing:
+  - Concurrent user simulation
+  - API response times
+  - Database performance
+- Set up monitoring:
+  - Error tracking
+  - Performance metrics
+  - User analytics
 ✅ Configure production deployment (Dockerfile with multi-stage build)
 ✅ Set up environment-specific configurations:
   - Development: Docker-based with API proxying
   - Production: Vercel/Render with direct API calls
+- Pre-launch checklist:
+  - Security audit
+  - Performance optimization
+  - Analytics verification
+  - Affiliate link testing
 - Launch MVP version
 
 ## 🧱 Scope Guardrails

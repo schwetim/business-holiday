@@ -21,6 +21,53 @@ A lightweight web platform using modern JAMstack principles:
 
 ## 🧰 Architecture Patterns
 
+### 🔄 User Flow Architecture
+```mermaid
+graph TD
+    A[Event Search] --> B[Event Selection]
+    B --> C[Hotel Search]
+    C --> D[Flight Search]
+    D --> E[Booking Links]
+    
+    subgraph Event Flow
+        A --> |Filter by| F[Industry]
+        A --> |Filter by| G[Region]
+        A --> |Filter by| H[Dates]
+    end
+    
+    subgraph Location Lock
+        B --> |Lock Location| C
+        B --> |Lock Dates| D
+    end
+    
+    subgraph Affiliate Flow
+        E --> I[Booking.com]
+        E --> J[WayAway]
+        E --> K[Event Website]
+    end
+```
+
+### 🎯 Data Flow Architecture
+```mermaid
+graph TD
+    A[Frontend] --> B[API Layer]
+    B --> C[Database]
+    B --> D[Strapi CMS]
+    B --> E[External APIs]
+    
+    subgraph External Services
+        E --> F[Booking.com API]
+        E --> G[WayAway API]
+        E --> H[Analytics]
+    end
+    
+    subgraph Data Storage
+        C --> I[Events]
+        C --> J[Analytics]
+        C --> K[User Flow]
+    end
+```
+
 ### API Layer Design
 - **Development Environment:**
   - Next.js API routes proxy requests to backend
@@ -34,21 +81,78 @@ A lightweight web platform using modern JAMstack principles:
   - Optimized for performance
   - No proxy overhead
 
-### Core Patterns
+### 🏗 Core Patterns
 - **Modular monolith**: Single repo, structured folders by domain (api, ui, db)
 - **Component-based UI**: Reusable components (HeroBanner, SelectField, DestinationSelect)
 - **RESTful API design**: Simple JSON contracts (/api/events)
 - **Static + dynamic hybrid**: Pre-rendered pages + API-interpolated content
 - **Incremental adoption**: Easy to replace/scale any part later
 
-### Docker Architecture
+### 🐳 Docker Architecture
 - **Docker-first development**: 
   - Consistent environments across team
   - Volume mounts for hot reloading
   - Environment-specific configurations
   - Container networking for local development
 
-### Data Layer
+### 📊 Data Layer
+
+#### Event Data Model
+```mermaid
+classDiagram
+    class Event {
+        +String id
+        +String title
+        +String description
+        +String industry
+        +String region
+        +String city
+        +Float latitude
+        +Float longitude
+        +Date startDate
+        +Date endDate
+        +Float ticketPrice
+        +String websiteUrl
+        +String imageUrl
+    }
+    
+    class Analytics {
+        +String id
+        +String eventId
+        +String action
+        +Date timestamp
+        +String userFlow
+    }
+    
+    Event --> Analytics
+```
+
+#### Integration Models
+```mermaid
+classDiagram
+    class HotelSearch {
+        +String city
+        +Date checkIn
+        +Date checkOut
+        +Int guests
+        +searchHotels()
+    }
+    
+    class FlightSearch {
+        +String origin
+        +String destination
+        +Date departDate
+        +Date returnDate
+        +searchFlights()
+    }
+    
+    class AffiliateTracking {
+        +String provider
+        +String clickId
+        +String eventId
+        +trackClick()
+    }
+```
 - **Type-safe data layer**: Prisma schema as single source of truth
 - **Environment Configuration**:
   - Service-specific .env files
@@ -60,7 +164,7 @@ A lightweight web platform using modern JAMstack principles:
   - Structured image path mapping
   - Environment-aware data loading
 
-### API Service Pattern
+### 🔌 API Service Pattern
 - **Centralized API Service**:
   - Single source of truth for API calls
   - Environment-aware base URL configuration
@@ -68,6 +172,38 @@ A lightweight web platform using modern JAMstack principles:
   - Type-safe interfaces
   - Prevents duplicate requests
   - Consistent request/response patterns
+
+### 📱 User Interface Patterns
+- **Progressive Disclosure**:
+  - Show basic event info first
+  - Expand details on interaction
+  - Step-by-step booking flow
+- **State Management**:
+  - Location locking
+  - Search parameters
+  - User flow tracking
+- **Error Handling**:
+  - Graceful degradation
+  - Informative messages
+  - Retry mechanisms
+- **Loading States**:
+  - Skeleton screens
+  - Progress indicators
+  - Optimistic updates
+
+### 🔍 Search Patterns
+- **Event Search**:
+  - Industry filtering
+  - Location-based results
+  - Date range filtering
+- **Hotel Search**:
+  - Location-locked search
+  - Price range filtering
+  - Amenity filtering
+- **Flight Search**:
+  - Origin airport selection
+  - Date flexibility
+  - Price tracking
 
 ## 🛡️ Principles Followed
 - Keep it simple (KISS)

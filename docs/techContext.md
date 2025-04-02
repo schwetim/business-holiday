@@ -9,7 +9,21 @@
   - Production: Direct API calls to backend URL
 - **TailwindCSS**: Utility-first CSS for fast UI development
 - **Google Maps JS API**: For visualizing event locations
-- **Affiliate Widgets**: WayAway (via Travelpayouts), Booking.com Deep Links
+- **Affiliate Integrations**:
+  - **Booking.com**:
+    - Deep linking system
+    - Commission tracking
+    - Price comparison API
+    - Availability checks
+  - **WayAway (Travelpayouts)**:
+    - Flight search API
+    - Price tracking
+    - Commission management
+    - White-label integration
+- **Analytics**:
+  - Google Analytics
+  - Custom event tracking
+  - Conversion monitoring
 
 ### Backend
 
@@ -18,6 +32,11 @@
 - **PostgreSQL**: Primary database (hosted via Render)
 - **Prisma ORM**: Type-safe schema, migration, and querying
 - **Docker**: Multi-stage builds for development and production
+- **Strapi CMS**:
+  - Event content management
+  - Media handling
+  - API generation
+  - Role-based access
 
 ## 🧪 Development Setup
 
@@ -27,20 +46,80 @@
     - NODE_ENV=development (in Docker)
     - BACKEND_URL=http://backend:5000 (for API proxy)
     - NEXT_TELEMETRY_DISABLED=1
+    - NEXT_PUBLIC_GOOGLE_MAPS_KEY
+    - NEXT_PUBLIC_GA_TRACKING_ID
   Backend (.env.backend):
     - DATABASE_URL
     - PORT=5000
     - CORS_ORIGIN=http://localhost:3000
   External APIs:
-    - Google Maps API key
-    - Booking.com affiliate ID
-    - WayAway token
+    - GOOGLE_MAPS_API_KEY
+    - BOOKING_COM_AFFILIATE_ID
+    - BOOKING_COM_API_KEY
+    - WAYAWAY_PARTNER_ID
+    - WAYAWAY_API_KEY
+    - STRAPI_API_TOKEN
+  Analytics:
+    - GA_MEASUREMENT_ID
+    - CONVERSION_TRACKING_ID
 - Local Development:
   - Docker Compose for service orchestration
   - Volume mounts for hot reloading
   - Environment-specific configurations
   - Next.js API routes for request proxying
 - Git-based deployment workflows (GitHub → Vercel / Render)
+
+## 🔌 External API Integration
+
+### Booking.com API
+- **Endpoints**:
+  - `/api/hotels/search`: Search hotels by location
+  - `/api/hotels/prices`: Get real-time pricing
+  - `/api/hotels/availability`: Check room availability
+- **Data Format**:
+  ```typescript
+  interface HotelSearch {
+    city: string;
+    checkIn: string;
+    checkOut: string;
+    guests: number;
+    priceRange?: {
+      min: number;
+      max: number;
+    };
+  }
+  ```
+
+### WayAway API
+- **Endpoints**:
+  - `/api/flights/search`: Search available flights
+  - `/api/flights/prices`: Get price history
+  - `/api/flights/booking`: Generate booking links
+- **Data Format**:
+  ```typescript
+  interface FlightSearch {
+    origin: string;
+    destination: string;
+    departDate: string;
+    returnDate?: string;
+    passengers: number;
+    class?: 'economy' | 'business';
+  }
+  ```
+
+### Strapi CMS Integration
+- **Content Types**:
+  - Events
+  - Locations
+  - Industries
+  - Media
+- **API Endpoints**:
+  - `/api/events`: CRUD operations
+  - `/api/media`: File uploads
+  - `/api/industries`: Reference data
+- **Authentication**:
+  - API token-based access
+  - Role-based permissions
 
 ## 🚧 Technical Constraints
 
