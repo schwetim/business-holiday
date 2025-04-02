@@ -10,18 +10,19 @@ const MAX_RETRIES = 3;
 const BASE_RETRY_DELAY = 1000; // ms
 
 // Determine environment-specific base URL
-const getBaseUrl = (useDirectBackend: boolean = false): string => {
+const getBaseUrl = (endpoint: string = ''): string => {
   // In production (Vercel), use the environment variable
   if (process.env.NODE_ENV === 'production') {
     return process.env.NEXT_PUBLIC_API_URL || '';
   }
   
-  // In development, use direct backend URL for health checks
-  if (useDirectBackend) {
+  // In development:
+  // - For health checks, use direct backend URL
+  // - For other endpoints, use relative path (Next.js API routing)
+  if (endpoint === 'health') {
     return process.env.BACKEND_URL || 'http://backend:5000';
   }
   
-  // In development, use relative path (Next.js API routing) for other requests
   return '';
 };
 
@@ -66,9 +67,13 @@ const handleApiError = (error: unknown, endpoint: string) => {
 // Check if backend is alive
 const checkBackendHealth = async (): Promise<boolean> => {
   try {
-    // Use direct backend URL for health checks to avoid routing loop
-    const response = await fetchWithRetry(`${getBaseUrl(true)}/api/health`);
-    return response.ok;
+    // Add direct=true query param to bypass Next.js API routes
+    const response = await fetchWithRetry(`${getBaseUrl('health')}/api/health?direct=true`);
+    if (!response.ok) {
+      console.warn('Backend health check failed with status:', response.status);
+      return false;
+    }
+    return true;
   } catch (error) {
     console.warn('Backend health check failed:', error);
     return false;

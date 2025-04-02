@@ -87,33 +87,43 @@ graph TD
 #### Health Check Pattern
 ```mermaid
 graph TD
-    A[Frontend] -->|1. Health Check Request| B[Next.js API Route]
-    B -->|2. Check Rate Limit| C{Rate Limited?}
-    C -->|Yes| D[Return Cached Status]
-    C -->|No| E[Forward to Backend]
-    E -->|3. Health Check| F[Backend Service]
-    F -->|4. Response| B
-    B -->|5. Cache & Return| A
+    A[Frontend] -->|1. Direct Health Check| B[Backend Service]
+    B -->|2. Health Response| A
+    C[Docker] -->|3. Health Probe| B
+    B -->|4. Health Status| C
     
-    subgraph Rate Limiting
-        G[Track Last Check Time]
-        H[Count Consecutive Failures]
-        I[Calculate Backoff Time]
+    subgraph Docker Health Check
+        D[wget Probe]
+        E[10s Interval]
+        F[5s Timeout]
+        G[3 Retries]
+    end
+    
+    subgraph Frontend Health Check
+        H[Direct Backend URL]
+        I[Bypass API Proxy]
+        J[Query Parameter Control]
     end
 ```
-- **Rate Limiting**:
-  - Minimum 5-second interval between checks
-  - Exponential backoff (1s to 30s)
-  - Consecutive failure tracking
-  - Request throttling
-  - Cache last known status
+- **Docker Health Check**:
+  - wget-based health probing
+  - 10-second check interval
+  - 5-second timeout
+  - 3 retry attempts
+  - 10-second startup grace period
+
+- **Frontend Health Check**:
+  - Direct backend URL access
+  - Proxy bypass via query params
+  - Startup coordination
+  - Service readiness verification
+  - Connection status monitoring
 
 - **Health Check Flow**:
-  - Frontend initiates check
-  - API route applies rate limiting
-  - Backend verifies readiness
-  - Response caching
-  - Status propagation
+  - Docker monitors backend health
+  - Frontend waits for backend readiness
+  - Direct health check requests
+  - Status propagation to UI
 
 #### Retry Pattern
 ```mermaid

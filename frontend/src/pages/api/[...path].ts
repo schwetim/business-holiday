@@ -72,7 +72,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Forward the request to the backend
-      const response = await fetch(`${backendUrl}/${apiPath}`, {
+      // Remove any leading slashes from apiPath to avoid double slashes
+      const cleanPath = typeof apiPath === 'string' ? apiPath.replace(/^\/+/, '') : '';
+      if (!cleanPath) {
+        throw new Error('Invalid API path');
+      }
+      const response = await fetch(`${backendUrl}/${cleanPath}`, {
         method: req.method,
         headers: filterHeaders(req.headers),
         body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,

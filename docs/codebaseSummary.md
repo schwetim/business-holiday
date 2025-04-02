@@ -70,11 +70,14 @@
 ## 🔄 Recent Changes
 
 ### Backend Availability Improvements
-- Added health check endpoint with rate limiting
-- Implemented exponential backoff (1s to 30s)
-- Added request timeout (3s)
-- Prevented log flooding during startup
-- Enhanced error reporting
+- Added Docker health check with wget probing
+- Configured health check parameters:
+  - 10s check interval
+  - 5s timeout
+  - 3 retry attempts
+  - 10s startup grace period
+- Added wget to backend container
+- Enhanced startup coordination
 
 ### API Service Resilience
 - Added retry logic with exponential backoff
@@ -91,11 +94,11 @@
 - Enhanced error state handling
 
 ### Development Environment
-- Added health check endpoints
-- Updated Docker startup handling
+- Added Docker health checks
+- Improved service startup coordination
+- Enhanced proxy configuration
+- Added direct backend access for health checks
 - Improved error handling and debugging
-- Enhanced development/production separation
-- Added connection failure recovery
 
 ### Previous Updates
 - Initialized project structure

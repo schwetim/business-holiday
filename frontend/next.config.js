@@ -12,8 +12,15 @@ const nextConfig = {
   rewrites: async () => {
     if (process.env.NODE_ENV === 'development') {
       // Only in development: proxy /api requests to the backend container
+      // Skip proxy only when direct=true query param is present
       return [{
         source: '/api/:path*',
+        missing: [
+          {
+            type: 'query',
+            key: 'direct',
+          },
+        ],
         destination: 'http://backend:5000/api/:path*',
       }];
     }

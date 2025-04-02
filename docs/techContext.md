@@ -41,9 +41,10 @@
 
 - **Node.js + Express**: Lightweight REST API layer
   - Health check endpoint (/api/health)
-  - Status monitoring
-  - Quick response times (3s timeout)
-  - Connection status reporting
+  - Docker health monitoring
+  - wget-based health probing
+  - 10s check interval with 5s timeout
+  - 3 retry attempts with 10s startup grace
 - **TypeScript**: For static typing and dev safety
 - **PostgreSQL**: Primary database (hosted via Render)
 - **Prisma ORM**: Type-safe schema, migration, and querying
@@ -87,6 +88,8 @@
   - Volume mounts for hot reloading
   - Environment-specific configurations
   - Next.js API routes for request proxying
+  - Health check-based startup coordination
+  - Service readiness verification
 - Git-based deployment workflows (GitHub → Vercel / Render)
 
 ## 🔌 External API Integration
