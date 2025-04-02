@@ -69,17 +69,81 @@ graph TD
 ```
 
 ### API Layer Design
-- **Development Environment:**
-  - Next.js API routes proxy requests to backend
+
+#### Development Environment
+- **Next.js API Routes**:
+  - Proxy requests to backend
   - Container-to-container communication
   - Hot reloading support
   - Local debugging capabilities
 
-- **Production Environment:**
+#### Production Environment
+- **Direct Communication**:
   - Direct API calls to backend URL
   - Environment variables from Vercel/Render
   - Optimized for performance
   - No proxy overhead
+
+#### Health Check Pattern
+```mermaid
+graph TD
+    A[Frontend] -->|1. Health Check Request| B[Next.js API Route]
+    B -->|2. Check Rate Limit| C{Rate Limited?}
+    C -->|Yes| D[Return Cached Status]
+    C -->|No| E[Forward to Backend]
+    E -->|3. Health Check| F[Backend Service]
+    F -->|4. Response| B
+    B -->|5. Cache & Return| A
+    
+    subgraph Rate Limiting
+        G[Track Last Check Time]
+        H[Count Consecutive Failures]
+        I[Calculate Backoff Time]
+    end
+```
+- **Rate Limiting**:
+  - Minimum 5-second interval between checks
+  - Exponential backoff (1s to 30s)
+  - Consecutive failure tracking
+  - Request throttling
+  - Cache last known status
+
+- **Health Check Flow**:
+  - Frontend initiates check
+  - API route applies rate limiting
+  - Backend verifies readiness
+  - Response caching
+  - Status propagation
+
+#### Retry Pattern
+```mermaid
+graph TD
+    A[API Request] -->|1. Initial Try| B{Success?}
+    B -->|No| C[Check Error Type]
+    C -->|Connection Error| D{Retry Count < Max?}
+    D -->|Yes| E[Calculate Delay]
+    E -->|Wait| A
+    D -->|No| F[Fail Request]
+    B -->|Yes| G[Return Response]
+    
+    subgraph Retry Logic
+        H[Max Retries: 5]
+        I[Initial Delay: 1s]
+        J[Max Delay: 10s]
+    end
+```
+- **Retry Configuration**:
+  - Maximum 5 retry attempts
+  - Initial 1-second delay
+  - Exponential backoff
+  - Maximum 10-second delay
+  - Connection error detection
+
+- **Implementation Levels**:
+  - API Service layer
+  - Component level
+  - Proxy route level
+  - Health check endpoint
 
 ### 🏗 Core Patterns
 - **Modular monolith**: Single repo, structured folders by domain (api, ui, db)
