@@ -9,34 +9,13 @@
   - Home page (search form)
   - Events page (dynamic listing)
   - Test environment page
-  - API routes:
-    - Health check endpoint with rate limiting
-    - Request proxy with retry logic
-- API Service:
-  - Centralized request handling
-  - Health check integration
-  - Retry mechanism with backoff
-  - Error handling and logging
-- Components:
-  - IndustrySelect with retry logic
-  - Loading states with attempt tracking
-  - Manual retry capabilities
-  - Error state handling
 - Environment configuration via .env.frontend
 - Docker containerized with volume mounts
 
 ### Backend (`/backend`)
 - Express.js server with TypeScript
-- RESTful API design:
-  - /api/events endpoint
-  - /api/health endpoint for status monitoring
-  - Quick response times (3s timeout)
-  - Connection status reporting
-- Docker containerized (dev and prod):
-  - Health monitoring
-  - Startup coordination
-  - Connection resilience
-  - Service readiness checks
+- RESTful API design (/api/events endpoint)
+- Docker containerized (dev and prod)
 - Prisma ORM with PostgreSQL
 - Auto-import script for development data
 - CSV-based event import with image mapping
@@ -68,39 +47,6 @@
 - (Pending) Affiliate APIs
 
 ## 🔄 Recent Changes
-
-### Backend Availability Improvements
-- Added Docker health check with wget probing
-- Configured health check parameters:
-  - 10s check interval
-  - 5s timeout
-  - 3 retry attempts
-  - 10s startup grace period
-- Added wget to backend container
-- Enhanced startup coordination
-
-### API Service Resilience
-- Added retry logic with exponential backoff
-- Implemented health check integration
-- Enhanced error handling and logging
-- Added direct backend fallback
-- Improved connection failure recovery
-
-### Component-Level Improvements
-- Added retry logic to IndustrySelect
-- Implemented backend health verification
-- Added user feedback during retries
-- Added manual retry capability
-- Enhanced error state handling
-
-### Development Environment
-- Added Docker health checks
-- Improved service startup coordination
-- Enhanced proxy configuration
-- Added direct backend access for health checks
-- Improved error handling and debugging
-
-### Previous Updates
 - Initialized project structure
 - Set up Docker containers
 - Configured TypeScript
@@ -109,14 +55,17 @@
 - Implemented Prisma ORM with models
 - Added /api/events endpoint
 - Created production Dockerfile with multi-stage build
-- Set up frontend environment variables
-- Implemented frontend routing structure
+- Set up frontend environment variables (NEXT_PUBLIC_API_URL) with Docker networking configuration
+- Implemented frontend routing structure with HeroBanner
 - Added API integration in events page
-- Created test environment page
-- Implemented core UI components
-- Enhanced Event model
-- Added development auto-import
-- Implemented CSV-based import
+- Created test environment page for debugging
+- Implemented core UI components:
+  - HeroBanner with responsive design
+  - IndustrySelect with API integration
+  - SelectField reusable component
+- Enhanced Event model with address and import fields
+- Added development auto-import functionality
+- Implemented CSV-based event import system
 
 ## 👥 User Feedback Integration
 - No user feedback yet (pre-launch)

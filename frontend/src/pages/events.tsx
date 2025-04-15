@@ -1,28 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import EventCard from '../components/EventCard';
-import { EventCardProps } from '../components/EventCard';
-
 interface Event {
   id: string;
   name: string;
-  startDate: Date;
   location: string;
-  industry: string;
-  description?: string;
-  websiteUrl?: string;
-  ticketPrice?: number;
-  imagePath?: string;
-  address: {
-    city: string;
-    region: string;
-    country: string;
-    street?: string;
-    zip?: string;
-  };
-  clickLogs: number;
-  bookings: number;
+  description: string;
+  price: number;
+  date: string;
 }
 
 export default function Events() {
@@ -30,7 +15,6 @@ export default function Events() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedEvent, setSelectedEvent] = useState<EventCardProps | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -52,12 +36,8 @@ export default function Events() {
           throw new Error('Failed to fetch events');
         }
 
-        const data: Event[] = await response.json();
-        console.log('Fetched events data:', data);
-        setEvents(data.map(event => ({
-          ...event,
-          startDate: new Date(event.startDate),
-        })));
+        const data = await response.json();
+        setEvents(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
@@ -67,10 +47,6 @@ export default function Events() {
 
     fetchEvents();
   }, [router.isReady, router.query]);
-
-  const handleSelectEvent = (event: EventCardProps) => {
-    setSelectedEvent(event);
-  };
 
   if (!router.isReady || loading) {
     return (
@@ -88,17 +64,9 @@ export default function Events() {
     );
   }
 
-  console.log('Rendering events page with:', events.length, 'events');
-
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {selectedEvent && (
-          <div className="bg-white rounded-lg shadow-md p-4 mb-8">
-            <h2 className="text-xl font-semibold">{selectedEvent.name}</h2>
-            <p className="text-gray-600">{selectedEvent.location}</p>
-          </div>
-        )}
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           Available Events
         </h1>
@@ -109,27 +77,34 @@ export default function Events() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => {
-              console.log('Rendering EventCard with:', event);
-              return (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  name={event.name}
-                  startDate={new Date(event.startDate)}
-                  location={event.location}
-                  industry={event.industry}
-                  description={event.description}
-                  websiteUrl={event.websiteUrl}
-                  ticketPrice={event.ticketPrice}
-                  imagePath={event.imagePath}
-                  address={event.address}
-                  clickLogs={event.clickLogs}
-                  bookings={event.bookings}
-                  onSelect={handleSelectEvent}
-                />
-              );
-            })}
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+              >
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    {event.name}
+                  </h2>
+                  <p className="text-gray-600 mb-4">{event.location}</p>
+                  <p className="text-gray-700 mb-4">{event.description}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-medium text-gray-900">
+                      ${event.price}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {new Date(event.date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => router.push(`/event/${event.id}`)}
+                    className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

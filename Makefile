@@ -8,7 +8,7 @@ downdev:
 	docker compose -f docker-compose.dev.yml down
 
 rebuilddev:
-	docker compose -f docker-compose.dev.yml down --volumes --remove-orphans && docker compose -f docker-compose.dev.yml up --build --force-recreate
+	docker compose -f docker-compose.dev.yml down --volumes --remove-orphans && docker compose -f docker-compose.dev.yml up --build
 
 # Production-style commands (use docker-compose.yml)
 up:

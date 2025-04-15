@@ -7,18 +7,6 @@
 - **Next.js**: React framework with static generation and routing
   - Development: API routes for proxying requests
   - Production: Direct API calls to backend URL
-  - Health check endpoint with rate limiting
-  - Retry logic with exponential backoff
-- **API Service Layer**:
-  - Centralized request handling
-  - Health check integration
-  - Retry mechanism with backoff
-  - Error handling and logging
-- **Component Resilience**:
-  - Built-in retry logic
-  - Health status monitoring
-  - User feedback during retries
-  - Manual retry capabilities
 - **TailwindCSS**: Utility-first CSS for fast UI development
 - **Google Maps JS API**: For visualizing event locations
 - **Affiliate Integrations**:
@@ -40,19 +28,10 @@
 ### Backend
 
 - **Node.js + Express**: Lightweight REST API layer
-  - Health check endpoint (/api/health)
-  - Docker health monitoring
-  - wget-based health probing
-  - 10s check interval with 5s timeout
-  - 3 retry attempts with 10s startup grace
 - **TypeScript**: For static typing and dev safety
 - **PostgreSQL**: Primary database (hosted via Render)
 - **Prisma ORM**: Type-safe schema, migration, and querying
 - **Docker**: Multi-stage builds for development and production
-  - Container health monitoring
-  - Startup coordination
-  - Connection resilience
-  - Service readiness checks
 - **Strapi CMS**:
   - Event content management
   - Media handling
@@ -88,8 +67,6 @@
   - Volume mounts for hot reloading
   - Environment-specific configurations
   - Next.js API routes for request proxying
-  - Health check-based startup coordination
-  - Service readiness verification
 - Git-based deployment workflows (GitHub → Vercel / Render)
 
 ## 🔌 External API Integration
@@ -170,18 +147,9 @@
   - Frontend container on port 3000
     - API requests proxied through Next.js API routes
     - Hot reloading enabled
-    - Health check monitoring
-    - Retry mechanisms active
   - Backend container on port 5000
     - Direct container-to-container communication
-    - Health status reporting
-    - Quick startup detection
   - Database container on port 5432
-  - Container startup coordination:
-    - Health check polling
-    - Connection retry logic
-    - Status monitoring
-    - Error rate limiting
 - Environment-specific configurations:
   - Development: 
     - Local services with hot reloading

@@ -22,17 +22,8 @@ services:
       - /app/node_modules
     env_file:
       - ./backend/.env
-    environment:
-      - NODE_ENV=development
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/api/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
     depends_on:
       - db
-
 
   frontend:
     build:
@@ -48,10 +39,8 @@ services:
     environment:
       - NODE_ENV=development
       - BACKEND_URL=http://backend:5000
-      - WATCHPACK_POLLING=true
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
 
   prisma-studio:
     build:

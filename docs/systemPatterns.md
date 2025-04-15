@@ -69,91 +69,17 @@ graph TD
 ```
 
 ### API Layer Design
-
-#### Development Environment
-- **Next.js API Routes**:
-  - Proxy requests to backend
+- **Development Environment:**
+  - Next.js API routes proxy requests to backend
   - Container-to-container communication
   - Hot reloading support
   - Local debugging capabilities
 
-#### Production Environment
-- **Direct Communication**:
+- **Production Environment:**
   - Direct API calls to backend URL
   - Environment variables from Vercel/Render
   - Optimized for performance
   - No proxy overhead
-
-#### Health Check Pattern
-```mermaid
-graph TD
-    A[Frontend] -->|1. Direct Health Check| B[Backend Service]
-    B -->|2. Health Response| A
-    C[Docker] -->|3. Health Probe| B
-    B -->|4. Health Status| C
-    
-    subgraph Docker Health Check
-        D[wget Probe]
-        E[10s Interval]
-        F[5s Timeout]
-        G[3 Retries]
-    end
-    
-    subgraph Frontend Health Check
-        H[Direct Backend URL]
-        I[Bypass API Proxy]
-        J[Query Parameter Control]
-    end
-```
-- **Docker Health Check**:
-  - wget-based health probing
-  - 10-second check interval
-  - 5-second timeout
-  - 3 retry attempts
-  - 10-second startup grace period
-
-- **Frontend Health Check**:
-  - Direct backend URL access
-  - Proxy bypass via query params
-  - Startup coordination
-  - Service readiness verification
-  - Connection status monitoring
-
-- **Health Check Flow**:
-  - Docker monitors backend health
-  - Frontend waits for backend readiness
-  - Direct health check requests
-  - Status propagation to UI
-
-#### Retry Pattern
-```mermaid
-graph TD
-    A[API Request] -->|1. Initial Try| B{Success?}
-    B -->|No| C[Check Error Type]
-    C -->|Connection Error| D{Retry Count < Max?}
-    D -->|Yes| E[Calculate Delay]
-    E -->|Wait| A
-    D -->|No| F[Fail Request]
-    B -->|Yes| G[Return Response]
-    
-    subgraph Retry Logic
-        H[Max Retries: 5]
-        I[Initial Delay: 1s]
-        J[Max Delay: 10s]
-    end
-```
-- **Retry Configuration**:
-  - Maximum 5 retry attempts
-  - Initial 1-second delay
-  - Exponential backoff
-  - Maximum 10-second delay
-  - Connection error detection
-
-- **Implementation Levels**:
-  - API Service layer
-  - Component level
-  - Proxy route level
-  - Health check endpoint
 
 ### 🏗 Core Patterns
 - **Modular monolith**: Single repo, structured folders by domain (api, ui, db)

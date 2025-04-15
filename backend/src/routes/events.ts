@@ -26,7 +26,6 @@ router.get('/cities', async (req: Request, res: Response) => {
 // Get unique industries from events
 router.get('/industries', async (req: Request, res: Response) => {
   try {
-    console.log('Backend: /api/events/industries called');
     const industries = await prisma.event.findMany({
       distinct: ['industry'],
       select: {
@@ -36,7 +35,6 @@ router.get('/industries', async (req: Request, res: Response) => {
         industry: 'asc'
       }
     });
-    console.log('Backend: /api/events/industries - industries:', industries);
     res.json(industries.map((i: { industry: string }) => i.industry));
   } catch (error) {
     console.error('Error fetching industries:', error);
