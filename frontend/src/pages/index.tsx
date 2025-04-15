@@ -2,24 +2,18 @@ import { useState, useEffect } from 'react';
 import HeroBanner from '../components/HeroBanner';
 import SelectField from '../components/SelectField';
 import IndustrySelect from '../components/IndustrySelect';
+import EventCard from '../components/EventCard'; // Import the new component
+import { Event } from '../types'; // Import the shared type
 
-interface Event {
-  id: number;
-  name: string;
-  industry: string;
-  city: string;
-  country: string;
-  region: string;
-  startDate: string;
-  endDate: string;
-}
+// Removed the old inline Event interface
 
 export default function Home() {
   const [industry, setIndustry] = useState('');
   const [region, setRegion] = useState('');
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>([]); // Use imported Event type
   const [industries, setIndustries] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [expandedCardId, setExpandedCardId] = useState<number | null>(null); // State for expanded card
 
   useEffect(() => {
     fetch('/api/events/industries')
@@ -100,21 +94,23 @@ export default function Home() {
               {isLoading ? 'Searching...' : 'Search Business Events & Hotels'}
             </button>
 
-            {events.length > 0 && (
+            {/* Event List Section */}
+            {isLoading && <p className="text-center mt-8">Loading events...</p>}
+            {!isLoading && events.length > 0 && (
               <div className="mt-8 space-y-4">
-                <h2 className="text-lg font-semibold">Found {events.length} events</h2>
+                <h2 className="text-lg font-semibold text-gray-800">Found {events.length} events</h2>
                 {events.map(event => (
-                  <div key={event.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <h3 className="font-medium">{event.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {event.city}, {event.country} ({event.region})
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}
-                    </p>
-                  </div>
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    isExpanded={event.id === expandedCardId}
+                    onToggle={() => setExpandedCardId(prevId => prevId === event.id ? null : event.id)}
+                  />
                 ))}
               </div>
+            )}
+            {!isLoading && events.length === 0 && industry && ( // Show message only after search attempt
+              <p className="text-center text-gray-500 mt-8">No events found for the selected criteria.</p>
             )}
           </div>
         </div>
