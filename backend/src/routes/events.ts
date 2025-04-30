@@ -68,4 +68,28 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+// Get a single event by ID
+router.get('/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const eventId = parseInt(id, 10); // Ensure ID is an integer
+    if (isNaN(eventId)) {
+      return res.status(400).json({ error: 'Invalid event ID format' });
+    }
+
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    res.json(event);
+  } catch (error) {
+    console.error(`Error fetching event with ID ${id}:`, error);
+    res.status(500).json({ error: 'Failed to fetch event' });
+  }
+});
+
 export default router;

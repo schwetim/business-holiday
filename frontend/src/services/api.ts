@@ -3,6 +3,8 @@
  * Uses Next.js API routes to proxy requests in development
  */
 
+import { Accommodation, Event } from '../types'; // Import types
+
 // Determine environment-specific base URL
 const getBaseUrl = (): string => {
   // In production (Vercel), use the environment variable
@@ -66,5 +68,60 @@ export const api = {
     } catch (error) {
       return handleApiError(error, 'events');
     }
+  },
+
+  /**
+   * Get accommodations filtered by criteria
+   */
+  getAccommodations: async (params: {
+    location: string;
+    startDate: string;
+    endDate: string;
+    // eventId?: string | number; // Optional: if needed later
+  }): Promise<Accommodation[]> => { // Use the defined Accommodation type
+    try {
+      const queryParams = new URLSearchParams();
+      
+      // Add only non-empty parameters
+      Object.entries(params).forEach(([key, value]) => {
+        if (value) queryParams.append(key, String(value)); // Ensure value is string
+      });
+
+      const response = await fetch(`${getBaseUrl()}/api/accommodations?${queryParams}`);
+
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      // Ensure Accommodation[] is returned even in error case for type consistency, 
+      // although handleApiError throws. Or adjust handleApiError if needed.
+      // For now, let handleApiError throw. The caller should catch.
+      return handleApiError(error, 'accommodations');
+    }
+  },
+
+  /**
+   * Get a single event by its ID
+   */
+  getEventById: async (id: string | number): Promise<Event | null> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/events/${id}`);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null; // Return null if event not found
+        }
+        throw new Error(`API returned status ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, `event/${id}`);
+    }
   }
 };
+
+// Re-import Accommodation type if needed within this file (usually not necessary)
+// import { Accommodation } from '../types';

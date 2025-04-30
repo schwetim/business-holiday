@@ -42,3 +42,15 @@ export interface Event {
 // Define related types if needed later
 // export interface ClickLog { ... }
 // export interface Booking { ... }
+
+// Represents accommodation data (e.g., from Booking.com API or mock)
+export interface Accommodation {
+  id: string | number; // Could be string or number depending on API
+  name: string;
+  price: number | string; // Price might be formatted string or number
+  currency?: string; // e.g., 'EUR', 'USD'
+  rating?: number | null; // e.g., 4.5
+  imageUrl?: string | null;
+  bookingLink: string; // Affiliate link
+  // Add other relevant fields as needed: address, amenities, etc.
+}
