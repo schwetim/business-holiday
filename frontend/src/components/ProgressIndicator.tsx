@@ -49,8 +49,10 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = () => {
     currentStep = 1; // Event selection
   } else if (currentPath === '/accommodation') {
     currentStep = 2; // Accommodation selection
-  } else if (currentPath === '/transportation') { // Assuming '/transportation' is the next step
+  } else if (currentPath === '/transportation') {
     currentStep = 3; // Transportation selection
+  } else if (currentPath === '/results') {
+    currentStep = 4; // Results/Summary
   }
   // Add more steps if needed
 
@@ -58,6 +60,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = () => {
     { label: 'Event', stepNumber: 1 },
     { label: 'Accommodation', stepNumber: 2 },
     { label: 'Transportation', stepNumber: 3 },
+    { label: 'Summary', stepNumber: 4 },
   ];
 
   return (

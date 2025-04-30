@@ -16,9 +16,12 @@
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "typescript": "^5.3.3",
-    "framer-motion": "^11.2.10"
+    "framer-motion": "^11.2.10",
+    "date-fns": "^3.6.0",
+    "react-datepicker": "^6.9.0"
   },
   "devDependencies": {
+    "@types/react-datepicker": "^4.19.6",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "autoprefixer": "^10.4.18",
