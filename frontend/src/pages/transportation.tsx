@@ -18,6 +18,9 @@ const TransportationPage: React.FC = () => {
   const [loadingFlights, setLoadingFlights] = useState<boolean>(false);
   const [flightError, setFlightError] = useState<string | null>(null);
 
+  // State to track if any flight interaction has occurred
+  const [flightInteractionOccurred, setFlightInteractionOccurred] = useState(false);
+
   // State to potentially store event details (optional, but useful for display)
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loadingEvent, setLoadingEvent] = useState<boolean>(true);
@@ -160,7 +163,11 @@ const TransportationPage: React.FC = () => {
         {!loadingFlights && !flightError && flights.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {flights.map(flight => (
-              <FlightCard key={flight.id} flight={flight} />
+              <FlightCard
+                key={flight.id}
+                flight={flight}
+                onInteraction={() => setFlightInteractionOccurred(true)} // Pass the callback
+              />
             ))}
           </div>
         )}
@@ -173,6 +180,7 @@ const TransportationPage: React.FC = () => {
                target="_blank"
                rel="noopener noreferrer"
                className="text-blue-600 hover:underline"
+               onClick={() => setFlightInteractionOccurred(true)} // Track interaction
              >
                See more flights for your Itinerary on kiwi.com
              </a>
@@ -185,9 +193,9 @@ const TransportationPage: React.FC = () => {
       <div className="mt-6 text-center">
         <button
           onClick={handleFinishPlanning}
-          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
-          // Disable if origin is not entered, as it's needed for the next step
-          disabled={!origin}
+          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+          // Disable until origin is entered AND flight interaction has occurred
+          disabled={!origin || !flightInteractionOccurred}
         >
           Finish Trip Planning
         </button>

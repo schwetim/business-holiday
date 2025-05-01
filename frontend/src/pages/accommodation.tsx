@@ -173,7 +173,7 @@ const AccommodationPage: React.FC = () => {
   return (
     <> {/* Use Fragment to avoid extra div */}
       {/* Selected Event Details Section */}
-      <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-lg">
+      <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-lg max-w-xl mx-auto">
         <div className="container mx-auto px-4 py-4">
           <h2 className="text-lg font-semibold text-gray-800 mb-2">Selected Event:</h2>
           {loadingEvent && <p>Loading event details...</p>}

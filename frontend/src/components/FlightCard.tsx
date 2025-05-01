@@ -4,9 +4,10 @@ import { format } from 'date-fns'; // Import date-fns for formatting
 
 interface FlightCardProps {
   flight: Flight;
+  onInteraction: () => void; // Add the new callback prop
 }
 
-const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
+const FlightCard: React.FC<FlightCardProps> = ({ flight, onInteraction }) => {
 
   // Helper to format price if it's a number
   const formatPrice = (price: number | string, currency?: string) => {
@@ -48,6 +49,7 @@ const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="mt-auto block w-full text-center bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
+          onClick={onInteraction} // Call the callback on click
         >
           Book Now on kiwi.com
         </a>
