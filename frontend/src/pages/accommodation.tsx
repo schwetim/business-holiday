@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '../services/api';
 import { Accommodation, Event } from '../types'; // Import Event type as well
 import ItinerarySidebar from '../components/ItinerarySidebar'; // Import the new sidebar component
 import AccommodationCard from '../components/AccommodationCard';
-import { parseDateString, addSubtractDays, formatDateToISO, calculateInclusiveDuration } from '../utils/dateUtils'; // Import date utilities
-
+import { parseDateString, addSubtractDays, formatDateToISO, calculateInclusiveDuration, isDateRangeValid } from '../utils/dateUtils'; // Import date utilities and validation helper
+import { isWithinInterval, parseISO } from 'date-fns'; // Import date-fns for validation
 
 const AccommodationPage: React.FC = () => {
   const router = useRouter();
-  const { eventId, location } = router.query; // Removed startDate and endDate from here
+  const { eventId, location } = router.query;
 
   const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
   const [loadingAccommodations, setLoadingAccommodations] = useState<boolean>(true);
@@ -23,9 +23,15 @@ const AccommodationPage: React.FC = () => {
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
 
+  // State for tentative date selection from calendar (before validation)
+  const [tentativeCheckInDate, setTentativeCheckInDate] = useState<Date | null>(null);
+  const [tentativeCheckOutDate, setTentativeCheckOutDate] = useState<Date | null>(null);
+
+  // State for validation hint message
+  const [validationHint, setValidationHint] = useState<string | null>(null);
+
   // Calculate total duration based on selected dates
   const totalDuration = (checkInDate && checkOutDate) ? calculateInclusiveDuration(checkInDate, checkOutDate) : null;
-
 
   // Fetch Selected Event Details and Calculate Initial Recommended Dates
   useEffect(() => {
@@ -44,9 +50,11 @@ const AccommodationPage: React.FC = () => {
             const initialCheckIn = addSubtractDays(eventStartDate, -3);
             const initialCheckOut = addSubtractDays(eventEndDate, 2);
 
-            // Set initial state for checkInDate and checkOutDate
+            // Set initial state for both selected and tentative dates
             setCheckInDate(initialCheckIn);
             setCheckOutDate(initialCheckOut);
+            setTentativeCheckInDate(initialCheckIn);
+            setTentativeCheckOutDate(initialCheckOut);
 
           } else {
             setEventError(`Event with ID ${eventId} not found.`);
@@ -64,10 +72,42 @@ const AccommodationPage: React.FC = () => {
     }
   }, [eventId, router.isReady]); // Depend on eventId and router readiness
 
-
-  // Fetch Accommodations using Selected Dates
+  // Validation logic and state update based on tentative dates
   useEffect(() => {
-    // Fetch accommodations only if location and selected dates are available
+    if (selectedEvent && tentativeCheckInDate && tentativeCheckOutDate) {
+      const eventStartDate = parseISO(selectedEvent.startDate);
+      const eventEndDate = parseISO(selectedEvent.endDate);
+
+      // Check if the tentative range includes the event dates
+      const isValid = isDateRangeValid(
+        tentativeCheckInDate,
+        tentativeCheckOutDate,
+        eventStartDate,
+        eventEndDate
+      );
+
+      if (isValid) {
+        // If valid, update the main state and hide hint
+        setCheckInDate(tentativeCheckInDate);
+        setCheckOutDate(tentativeCheckOutDate);
+        setValidationHint(null);
+      } else {
+        // If invalid, show hint and do NOT update main state
+        setValidationHint("Selected range must include the event dates.");
+        // Keep the main checkInDate/checkOutDate state unchanged
+      }
+    } else if (tentativeCheckInDate || tentativeCheckOutDate) {
+        // If one date is selected but not the other, clear hint
+        setValidationHint(null);
+    } else {
+        // If both dates are cleared, clear hint
+        setValidationHint(null);
+    }
+  }, [tentativeCheckInDate, tentativeCheckOutDate, selectedEvent]); // Depend on tentative dates and selected event
+
+  // Fetch Accommodations using Selected Dates (this useEffect now depends on the *validated* dates)
+  useEffect(() => {
+    // Fetch accommodations only if location and *validated* selected dates are available
     if (location && typeof location === 'string' && checkInDate && checkOutDate) {
       setLoadingAccommodations(true);
       setAccommodationError(null);
@@ -92,8 +132,9 @@ const AccommodationPage: React.FC = () => {
           setAccommodationError('Failed to load accommodations. Please try again later.');
           setLoadingAccommodations(false);
         });
-    } else if (router.isReady) {
-      // This block handles cases where location or dates are missing.
+    } else if (router.isReady && (!checkInDate || !checkOutDate)) {
+      // This block handles cases where location or *validated* dates are missing.
+      // Only show error if router is ready and dates are missing after potential initial load
       if (!location) {
          setAccommodationError('Missing required information (location) to search for accommodations.');
       } else if (!checkInDate || !checkOutDate) {
@@ -102,18 +143,21 @@ const AccommodationPage: React.FC = () => {
       }
       setLoadingAccommodations(false);
     }
-    // Dependency array: Trigger fetch when location or selected dates change
+    // Dependency array: Trigger fetch when location or *validated* selected dates change
   }, [location, checkInDate, checkOutDate, router.isReady]);
 
+  // Handlers for date changes from the sidebar calendar (update tentative state)
+  const handleTentativeCheckInChange = useCallback((date: Date | null) => {
+    setTentativeCheckInDate(date);
+    // Clear hint on any new interaction
+    setValidationHint(null);
+  }, []);
 
-  // Handlers for date changes from the sidebar calendar
-  const handleCheckInChange = (date: Date | null) => {
-    setCheckInDate(date);
-  };
-
-  const handleCheckOutChange = (date: Date | null) => {
-    setCheckOutDate(date);
-  };
+  const handleTentativeCheckOutChange = useCallback((date: Date | null) => {
+    setTentativeCheckOutDate(date);
+     // Clear hint on any new interaction
+    setValidationHint(null);
+  }, []);
 
 
   // Helper to format date range for event details display
@@ -152,12 +196,20 @@ const AccommodationPage: React.FC = () => {
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Sidebar Column */}
         <div className="md:col-span-1">
-          <ItinerarySidebar
-            checkInDate={checkInDate}
-            checkOutDate={checkOutDate}
-            onCheckInChange={handleCheckInChange}
-            onCheckOutChange={handleCheckOutChange}
-          />
+          {selectedEvent && ( // Only render sidebar if event is loaded
+            <ItinerarySidebar
+              checkInDate={tentativeCheckInDate} // Pass tentative dates to sidebar
+              checkOutDate={tentativeCheckOutDate} // Pass tentative dates to sidebar
+              onCheckInChange={handleTentativeCheckInChange} // Use tentative handlers
+              onCheckOutChange={handleTentativeCheckOutChange} // Use tentative handlers
+              eventStartDate={selectedEvent.startDate} // Pass event dates for highlighting
+              eventEndDate={selectedEvent.endDate} // Pass event dates for highlighting
+            />
+          )}
+           {/* Validation Hint */}
+           {validationHint && (
+              <p className="text-red-500 text-sm mt-2">{validationHint}</p>
+           )}
         </div>
 
         {/* Main Content Column */}
@@ -178,7 +230,11 @@ const AccommodationPage: React.FC = () => {
           </button> */}
 
           {/* Accommodation Loading/Error/List */}
-          {loadingAccommodations && <p>Loading accommodations...</p>}
+          {loadingAccommodations && (
+             <div className="flex justify-center items-center h-48">
+               <p className="text-lg font-semibold">Loading accommodations...</p>
+             </div>
+          )}
 
           {accommodationError && <p className="text-red-500">{accommodationError}</p>}
 

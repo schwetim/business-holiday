@@ -1,10 +1,11 @@
 import express, { Request, Response, Router } from 'express';
 import { Accommodation } from '../types'; // Import from backend types
+import { differenceInDays, parseISO } from 'date-fns'; // Import date-fns
 
 const router: Router = express.Router();
 
 // Mock data generation function
-const generateMockAccommodations = (location: string, startDate: string, endDate: string): Accommodation[] => {
+const generateMockAccommodations = (location: string, startDateStr: string, endDateStr: string): Accommodation[] => {
   // Simple mock data - replace with real API call later
   const mockHotels = [
     { id: 'hotel1', name: `Grand Hotel ${location}`, price: 150, currency: 'EUR', rating: 4.5, imageUrl: `/mock-images/hotel1.jpg`, bookingLink: '#' },
@@ -17,15 +18,27 @@ const generateMockAccommodations = (location: string, startDate: string, endDate
   // For now, just return the list slightly varied or filtered if needed.
   // Example: return fewer hotels if dates are short? Or vary prices?
   // Let's just return the full list for now for simplicity.
-  
-  console.log(`Generating mock accommodations for ${location} from ${startDate} to ${endDate}`);
 
-  // Add booking links (placeholder - replace with actual affiliate links)
-  return mockHotels.map(hotel => ({
-    ...hotel,
-    // In a real scenario, the booking link would be generated based on dates, location, etc.
-    bookingLink: `https://example.booking.com/search?location=${encodeURIComponent(location)}&checkin=${startDate}&checkout=${endDate}&hotel_id=${hotel.id}&aid=YOUR_AFFILIATE_ID` 
-  }));
+  console.log(`Generating mock accommodations for ${location} from ${startDateStr} to ${endDateStr}`);
+
+  const startDate = parseISO(startDateStr);
+  const endDate = parseISO(endDateStr);
+  const durationInDays = differenceInDays(endDate, startDate);
+  const durationInNights = durationInDays > 0 ? durationInDays : 1; // Assume at least 1 night stay
+
+  // Add booking links and calculate total price
+  return mockHotels.map(hotel => {
+    const totalPrice = typeof hotel.price === 'number'
+      ? hotel.price * durationInNights
+      : hotel.price; // Keep string price as is
+
+    return {
+      ...hotel,
+      totalPrice,
+      // In a real scenario, the booking link would be generated based on dates, location, etc.
+      bookingLink: `https://example.booking.com/search?location=${encodeURIComponent(location)}&checkin=${startDateStr}&checkout=${endDateStr}&hotel_id=${hotel.id}&aid=YOUR_AFFILIATE_ID`
+    };
+  });
 };
 
 // GET /api/accommodations

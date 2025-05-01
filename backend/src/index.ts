@@ -41,8 +41,11 @@ app.use((err: ErrorWithStatus, req: Request, res: Response, next: NextFunction) 
 // Routes
 import eventRoutes from './routes/events';
 import accommodationRoutes from './routes/accommodations'; // Import accommodation routes
+import flightRoutes from './routes/flights'; // Import flight routes
+
 app.use('/api/events', eventRoutes);
 app.use('/api/accommodations', accommodationRoutes); // Use accommodation routes
+app.use('/api/flights', flightRoutes); // Use flight routes
 
 // Health check endpoint
 app.get('/api/health', (req: Request, res: Response) => {

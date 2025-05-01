@@ -74,9 +74,14 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({
           {accommodation.rating != null && (
             <p className="text-sm text-yellow-600 mb-2">Rating: {accommodation.rating} / 5</p> // Assuming a 5-star scale
           )}
-          <p className="text-lg font-medium text-gray-800 mb-3">
-            {formatPrice(accommodation.price, accommodation.currency)}
+          <p className="text-lg font-medium text-gray-800 mb-1">
+            {formatPrice(accommodation.price, accommodation.currency)} per night
           </p>
+          {accommodation.totalPrice != null && (
+             <p className="text-base text-gray-700 mb-3">
+               {formatPrice(accommodation.totalPrice, accommodation.currency)} total for stay
+             </p>
+          )}
         </div>
 
         {/* Changed from <a> to <button> and updated text/handler */}

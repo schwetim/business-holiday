@@ -53,4 +53,19 @@ export interface Accommodation {
   imageUrl?: string | null;
   bookingLink: string; // Affiliate link
   // Add other relevant fields as needed: address, amenities, etc.
+  totalPrice?: number | string;
+}
+
+// Represents flight data (e.g., from WayAway API or mock)
+export interface Flight {
+  id: string | number; // Could be string or number depending on API
+  airline: string;
+  departureTime: string; // ISO string or similar
+  arrivalTime: string;   // ISO string or similar
+  duration: string;      // e.g., "2h 30m"
+  stops: number;
+  price: number | string; // Price might be formatted string or number
+  currency?: string; // e.g., 'EUR', 'USD'
+  bookingLink: string; // Affiliate link (mock URL for now)
+  // Add other relevant fields as needed: origin, destination, etc.
 }

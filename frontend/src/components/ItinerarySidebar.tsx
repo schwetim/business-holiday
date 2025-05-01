@@ -1,18 +1,32 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import the styles
+import { isWithinInterval, parseISO } from 'date-fns'; // Import date-fns functions
 
 interface ItinerarySidebarProps {
   checkInDate: Date | null;
   checkOutDate: Date | null;
+  eventStartDate: string; // Event start date string from API
+  eventEndDate: string;   // Event end date string from API
   onCheckInChange: (date: Date | null) => void;
   onCheckOutChange: (date: Date | null) => void;
 }
 
-const ItinerarySidebar: React.FC<ItinerarySidebarProps> = ({ checkInDate, checkOutDate, onCheckInChange, onCheckOutChange }) => {
+const ItinerarySidebar: React.FC<ItinerarySidebarProps> = ({
+  checkInDate,
+  checkOutDate,
+  eventStartDate,
+  eventEndDate,
+  onCheckInChange,
+  onCheckOutChange
+}) => {
   // react-datepicker uses a single state for the date range
   const [dateRange, setDateRange] = React.useState<[Date | null, Date | null]>([checkInDate, checkOutDate]);
   const [startDate, endDate] = dateRange;
+
+  // Parse event dates once
+  const parsedEventStartDate = React.useMemo(() => parseISO(eventStartDate), [eventStartDate]);
+  const parsedEventEndDate = React.useMemo(() => parseISO(eventEndDate), [eventEndDate]);
 
   // Update internal state when props change (e.g., initial load from recommended dates)
   React.useEffect(() => {
@@ -26,23 +40,29 @@ const ItinerarySidebar: React.FC<ItinerarySidebarProps> = ({ checkInDate, checkO
     const [newStartDate, newEndDate] = update;
 
     // Call parent component's handlers when a range is selected
-    if (newStartDate && newEndDate) {
-      onCheckInChange(newStartDate);
-      onCheckOutChange(newEndDate);
-    } else if (newStartDate && !newEndDate) {
-      // Handle case where only start date is selected (clearing end date)
-      onCheckInChange(newStartDate);
-      onCheckOutChange(null);
-    } else if (!newStartDate && newEndDate) {
-       // Handle case where only end date is selected (shouldn't happen with selectsRange=true, but for robustness)
-       onCheckInChange(null);
-       onCheckOutChange(newEndDate);
-    } else {
-       // Handle case where both dates are cleared
-       onCheckInChange(null);
-       onCheckOutChange(null);
-    }
+    // The validation logic will be handled in the parent (accommodation.tsx)
+    onCheckInChange(newStartDate);
+    onCheckOutChange(newEndDate);
   };
+
+  // Function to determine day class names
+  const getDayClassName = (date: Date): string | null => {
+    let className = '';
+
+    // Highlight selected range
+    if (startDate && endDate && date >= startDate && date <= endDate) {
+      className += ' bg-blue-200';
+    }
+
+    // Highlight event dates
+    if (isWithinInterval(date, { start: parsedEventStartDate, end: parsedEventEndDate })) {
+       className += ' bg-green-200'; // Use a different color for event dates
+    }
+
+    // Combine classes, trim whitespace
+    return className.trim() || null;
+  };
+
 
   return (
     <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
@@ -57,9 +77,7 @@ const ItinerarySidebar: React.FC<ItinerarySidebarProps> = ({ checkInDate, checkO
           isClearable={true}
           inline // Display calendar inline
           calendarClassName="border-0 shadow-none" // Basic styling adjustments
-          dayClassName={(date: Date): string | null =>
-            date >= (startDate || new Date(0)) && date <= (endDate || new Date(0)) ? 'bg-blue-200' : null
-          } // Highlight selected range (basic)
+          dayClassName={getDayClassName} // Use the custom function for day classes
         />
       </div>
       {/* Other itinerary details will go here */}

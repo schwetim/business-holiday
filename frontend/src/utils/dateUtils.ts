@@ -50,3 +50,17 @@ export const formatDisplayDateRange = (start: Date, end: Date): string => {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
   return `${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}`;
 };
+
+/**
+ * Checks if a selected date range fully includes an event date range.
+ * @param selectedStart The start Date of the selected range.
+ * @param selectedEnd The end Date of the selected range.
+ * @param eventStart The start Date of the event range.
+ * @param eventEnd The end Date of the event range.
+ * @returns True if the selected range includes the event range, false otherwise.
+ */
+export const isDateRangeValid = (selectedStart: Date, selectedEnd: Date, eventStart: Date, eventEnd: Date): boolean => {
+  // The selected range is valid if its start is on or before the event start,
+  // AND its end is on or after the event end.
+  return selectedStart <= eventStart && selectedEnd >= eventEnd;
+};
