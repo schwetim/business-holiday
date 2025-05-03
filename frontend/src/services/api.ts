@@ -3,7 +3,7 @@
  * Uses Next.js API routes to proxy requests in development
  */
 
-import { Accommodation, Event, Flight, IndustryWithCount } from '../types'; // Import types
+import { Accommodation, Event, Flight, IndustryWithCount, SearchResults } from '../types'; // Import types
 
 // Determine environment-specific base URL
 const getBaseUrl = (): string => {
@@ -166,8 +166,23 @@ export const api = {
     } catch (error) {
       return handleApiError(error, 'flights');
     }
-  }
-};
+  },
 
-// Re-import Accommodation type if needed within this file (usually not necessary)
-// import { Accommodation } from '../types';
+  /**
+   * Perform a global search across events, categories, and tags
+   */
+  search: async (query: string): Promise<SearchResults> => {
+    try {
+      const queryParams = new URLSearchParams({ q: query });
+      const response = await fetch(`${getBaseUrl()}/api/search?${queryParams}`);
+
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, 'search');
+    }
+  },
+};

@@ -101,3 +101,11 @@ export interface RecommendedTrip {
   // Add other fields needed for the detail page, e.g., event details, map coordinates
   eventDetails?: Event | null; // Include linked event details
 }
+
+// Represents the structure of search results
+export interface SearchResults {
+  events: Event[];
+  categories: Category[];
+  tags: Tag[];
+  recentSearches: string[]; // Placeholder for locally stored recent searches
+}
