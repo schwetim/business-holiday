@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { api } from '../services/api'; // Import api service
 import { SearchResults, Event, Category, Tag } from '../types'; // Import types
+import { useAuth } from '@/context/AuthContext'; // Import useAuth hook
 
 const RECENT_SEARCHES_STORAGE_KEY = 'recentSearches';
 const MAX_RECENT_SEARCHES = 5;
@@ -18,6 +19,7 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
 };
 
 const TopNavbar: React.FC = () => {
+  const { isAuthenticated, toggleAuth } = useAuth(); // Use the auth hook
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -318,9 +320,44 @@ const TopNavbar: React.FC = () => {
                )}
             </div>
           )}
-          <button className="bg-white text-purple-700 px-4 py-2 rounded-md hover:bg-gray-200 transition duration-300">
-            User Login
+          {/* Auth Toggle Button (for testing) */}
+          <button
+            onClick={toggleAuth}
+            className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300 text-sm"
+          >
+            {isAuthenticated ? 'Logout (Test)' : 'Login (Test)'}
           </button>
+          {/* User Authentication */}
+          {isAuthenticated ? (
+            // User Dropdown (Placeholder)
+            <div className="relative"> {/* Added relative positioning for dropdown */}
+              {/* User Avatar Placeholder */}
+              <button className="flex items-center text-white focus:outline-none"> {/* Made avatar clickable */}
+                {/* Replace with actual user avatar */}
+                <svg className="w-8 h-8 text-gray-200 rounded-full overflow-hidden bg-gray-700" fill="currentColor" viewBox="0 0 24 24"> {/* Added styling */}
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              </button>
+              {/* Dropdown Menu (Placeholder) */}
+              {/* This will be conditionally rendered based on a state variable */}
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"> {/* Added absolute positioning and styling */}
+                <Link href="/account/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Profile
+                </Link>
+                <Link href="/account/saved-trips" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Saved Trips
+                </Link>
+                <button onClick={() => alert('Logout clicked!')} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            // Login Button
+            <button className="bg-white text-purple-700 px-4 py-2 rounded-md hover:bg-gray-200 transition duration-300">
+              User Login
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Button */}

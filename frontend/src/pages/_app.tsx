@@ -3,10 +3,11 @@ import type { AppProps } from 'next/app';
 import HeroBanner from '@/components/HeroBanner';
 import TopNavbar from '@/components/TopNavbar';
 import ProgressIndicator from '@/components/ProgressIndicator'; // Import the ProgressIndicator
+import { AuthProvider } from '@/context/AuthContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <AuthProvider>
       <TopNavbar />
       <HeroBanner />
       <ProgressIndicator /> {/* Add the progress indicator */}
@@ -14,6 +15,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </main>
       {/* Add Footer component here later if needed */}
-    </>
+    </AuthProvider>
   );
 }

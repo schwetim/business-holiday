@@ -24,11 +24,21 @@ const RecommendedTripCard: React.FC<RecommendedTripCardProps> = ({ trip }) => {
           <br />
           <span className="font-medium">Accommodation:</span> {trip.accommodationSuggestion}
         </p>
-        <Link href={`/recommended-trips/${trip.id}`} passHref>
-          <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-            View Details
+        {/* Buttons Container */}
+        <div className="flex justify-between items-center mt-4"> {/* Added flex classes and margin-top */}
+          <Link href={`/recommended-trips/${trip.id}`} passHref>
+            <button className="w-auto bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out text-sm"> {/* Adjusted width and text size */}
+              View Details
+            </button>
+          </Link>
+          {/* Save Button Placeholder */}
+          <button
+            className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition duration-300 text-sm"
+            onClick={(e) => { e.stopPropagation(); alert('Save button clicked!'); }} // Placeholder action
+          >
+            Save
           </button>
-        </Link>
+        </div>
       </div>
     </div>
   );

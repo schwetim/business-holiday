@@ -160,10 +160,17 @@ const EventCard: React.FC<EventCardProps> = ({ event, isExpanded, onToggle }) =>
               {/* <p className="text-sm text-gray-500">Bookings: {event.bookingsCount ?? 0}</p> */}
 
               {/* Select Button */}
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center"> {/* Added flex classes */}
+                {/* Save Button Placeholder */}
+                <button
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300 text-sm"
+                  onClick={(e) => { e.stopPropagation(); alert('Save button clicked!'); }} // Placeholder action
+                >
+                  Save
+                </button>
                 <button
                   onClick={handleSelect}
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                  className="w-auto bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" // Adjusted width
                 >
                   Select Event & Find Accommodation
                 </button>
