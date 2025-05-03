@@ -8,6 +8,11 @@ export interface Tag {
   name: string;
 }
 
+export interface IndustryWithCount {
+  name: string;
+  count: number;
+}
+
 // Corresponds to the Event model in Prisma, assuming the API returns all fields
 export interface Event {
   id: number;

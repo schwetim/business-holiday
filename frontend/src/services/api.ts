@@ -3,7 +3,7 @@
  * Uses Next.js API routes to proxy requests in development
  */
 
-import { Accommodation, Event, Flight } from '../types'; // Import types
+import { Accommodation, Event, Flight, IndustryWithCount } from '../types'; // Import types
 
 // Determine environment-specific base URL
 const getBaseUrl = (): string => {
@@ -40,15 +40,32 @@ export const api = {
       return handleApiError(error, 'industries');
     }
   },
-  
+
+  /**
+   * Get list of industries with event counts
+   */
+  getIndustriesWithCount: async (): Promise<IndustryWithCount[]> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/events/industries-with-count`);
+
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, 'industries-with-count');
+    }
+  },
+
   /**
    * Get events filtered by criteria
    */
-  getEvents: async (params: { 
-    industry: string, 
+  getEvents: async (params: {
+    industry: string,
     region?: string,
     startDate?: string,
-    endDate?: string 
+    endDate?: string
   }): Promise<any[]> => {
     try {
       const queryParams = new URLSearchParams();

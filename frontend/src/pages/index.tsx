@@ -6,6 +6,7 @@ import CategoryMultiSelect from '../components/CategoryMultiSelect'; // Import t
 import TagMultiSelect from '../components/TagMultiSelect'; // Import the new component
 import Link from 'next/link'; // Import Link for navigation
 import RecommendedTripCard from '../components/RecommendedTripCard'; // Import the new component
+import CategoryBrowseGrid from '../components/CategoryBrowseGrid'; // Import the new component
 import { Event, Category, Tag, RecommendedTrip } from '../types'; // Import the shared types
 
 // Removed the old inline Event interface
@@ -333,6 +334,9 @@ export default function Home() {
           )}
         </div>
       )}
+
+      {/* Browse by Industry & Category Section */}
+      <CategoryBrowseGrid />
     </div>
   );
 }

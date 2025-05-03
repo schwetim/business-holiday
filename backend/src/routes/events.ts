@@ -42,6 +42,33 @@ router.get('/industries', async (req: Request, res: Response) => {
   }
 });
 
+// Get industries with event counts
+router.get('/industries-with-count', async (req: Request, res: Response) => {
+  try {
+    const industriesWithCount = await prisma.event.groupBy({
+      by: ['industry'],
+      _count: {
+        industry: true,
+      },
+      orderBy: {
+        industry: 'asc',
+      },
+    });
+
+    // Format the result
+    const formattedResult = industriesWithCount.map(item => ({
+      name: item.industry,
+      count: item._count.industry,
+    }));
+
+    res.json(formattedResult);
+  } catch (error) {
+    console.error('Error fetching industries with count:', error);
+    res.status(500).json({ error: 'Failed to fetch industries with count' });
+  }
+});
+
+
 // Get all categories
 router.get('/categories', async (req: Request, res: Response) => {
   try {
