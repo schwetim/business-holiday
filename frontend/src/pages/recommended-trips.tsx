@@ -8,8 +8,15 @@ const RecommendedTripsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Placeholder state for filtering and sorting
+  const [filterRegion, setFilterRegion] = useState('');
+  const [filterDuration, setFilterDuration] = useState('');
+  const [filterPrice, setFilterPrice] = useState('');
+  const [sortBy, setSortBy] = useState('newest'); // 'newest', 'popularity', 'price'
+
   useEffect(() => {
     setIsLoading(true);
+    // TODO: Implement actual filtering and sorting in the backend API call
     fetch('/api/recommended-trips')
       .then(res => {
         if (!res.ok) {
@@ -29,12 +36,60 @@ const RecommendedTripsPage: React.FC = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [/* Add filter/sort dependencies here when implemented */]); // Add dependencies when filtering/sorting is implemented
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">All Recommended Trips</h1>
+
+        {/* Filtering and Sorting UI - Placeholder */}
+        <div className="mb-8 flex flex-wrap justify-center gap-4">
+          <select
+            value={filterRegion}
+            onChange={(e) => setFilterRegion(e.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="">All Regions</option>
+            {/* TODO: Populate with actual regions from API */}
+            <option value="europe">Europe</option>
+            <option value="asia">Asia</option>
+          </select>
+
+          <select
+            value={filterDuration}
+            onChange={(e) => setFilterDuration(e.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Any Duration</option>
+            {/* TODO: Populate with actual duration options */}
+            <option value="short">Short (1-3 days)</option>
+            <option value="medium">Medium (4-7 days)</option>
+            <option value="long">Long (8+ days)</option>
+          </select>
+
+          <select
+            value={filterPrice}
+            onChange={(e) => setFilterPrice(e.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Any Price Range</option>
+            {/* TODO: Populate with actual price range options */}
+            <option value="low">Low (&lt; $500)</option>
+            <option value="medium">Medium ($500 - $1500)</option>
+            <option value="high">High (&gt; $1500)</option>
+          </select>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="newest">Sort by Newest</option>
+            <option value="popularity">Sort by Popularity</option>
+            <option value="price">Sort by Price</option>
+          </select>
+        </div>
 
         {isLoading && <p className="text-center">Loading recommendations...</p>}
         {error && <p className="text-center text-red-500">{error}</p>}

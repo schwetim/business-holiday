@@ -94,4 +94,10 @@ export interface RecommendedTrip {
   destination: string;
   dates: string;
   accommodationSuggestion: string;
+
+  // Fields for the detailed view
+  suggestedAccommodation?: Accommodation | null; // Assuming one suggested hotel for the detail view
+  suggestedFlights?: Flight[]; // Assuming multiple suggested flights for the detail view
+  // Add other fields needed for the detail page, e.g., event details, map coordinates
+  eventDetails?: Event | null; // Include linked event details
 }
