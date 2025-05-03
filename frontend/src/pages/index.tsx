@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import SelectField from '../components/SelectField';
 import IndustrySelect from '../components/IndustrySelect';
 import EventCard from '../components/EventCard'; // Import the new component
-import { Event } from '../types'; // Import the shared type
+import CategoryMultiSelect from '../components/CategoryMultiSelect'; // Import the new component
+import TagMultiSelect from '../components/TagMultiSelect'; // Import the new component
+import Link from 'next/link'; // Import Link for navigation
+import RecommendedTripCard from '../components/RecommendedTripCard'; // Import the new component
+import { Event, Category, Tag, RecommendedTrip } from '../types'; // Import the shared types
 
 // Removed the old inline Event interface
 
@@ -13,9 +17,13 @@ export default function Home() {
   const [keywords, setKeywords] = useState(''); // New state for keywords
   const [events, setEvents] = useState<Event[]>([]); // Use imported Event type
   const [industries, setIndustries] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]); // New state for selected categories
+  const [selectedTags, setSelectedTags] = useState<number[]>([]); // New state for selected tags
+  const [recommendedTrips, setRecommendedTrips] = useState<RecommendedTrip[]>([]); // New state for recommended trips
   const [isLoading, setIsLoading] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState<number | null>(null); // State for expanded card
 
+  // Fetch industries on mount
   useEffect(() => {
     fetch('/api/events/industries')
       .then(res => {
@@ -35,13 +43,65 @@ export default function Home() {
       });
   }, []);
 
+  // Fetch recommended trips on mount
+  useEffect(() => {
+    fetch('/api/recommended-trips')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data: RecommendedTrip[]) => {
+        setRecommendedTrips(data);
+      })
+      .catch(error => {
+        console.error('Error fetching recommended trips:', error);
+        setRecommendedTrips([]);
+      });
+  }, []);
+
   const handleSearch = async () => {
     if (activeTab === 'events') {
-      if (!industry && !keywords && !region) return; // Allow search with just keywords or region
+      // Allow search with any combination of filters, including none
       setIsLoading(true);
       try {
-        // Include keywords in the API call if needed by the backend
-        const res = await fetch(`/api/events?industry=${industry}&region=${region}&keywords=${keywords}`);
+        // Fetch categories and tags to map selected IDs to names for the API call
+        const categoriesRes = await fetch('/api/events/categories');
+        const tagsRes = await fetch('/api/events/tags');
+
+        if (!categoriesRes.ok) {
+           throw new Error(`HTTP error! status: ${categoriesRes.status}`);
+        }
+         if (!tagsRes.ok) {
+           throw new Error(`HTTP error! status: ${tagsRes.status}`);
+        }
+
+        const allCategories: Category[] = await categoriesRes.json();
+        const allTags: Tag[] = await tagsRes.json();
+
+        const selectedCategoryNames = allCategories
+          .filter(cat => selectedCategories.includes(cat.id))
+          .map(cat => cat.name);
+
+        const selectedTagNames = allTags
+          .filter(tag => selectedTags.includes(tag.id))
+          .map(tag => tag.name);
+
+
+        const queryParams = new URLSearchParams();
+        if (industry) queryParams.append('industry', industry);
+        if (region) queryParams.append('region', region);
+        if (keywords) queryParams.append('keywords', keywords);
+        if (selectedCategoryNames.length > 0) {
+          queryParams.append('categories', selectedCategoryNames.join(','));
+        }
+        if (selectedTagNames.length > 0) {
+          queryParams.append('tags', selectedTagNames.join(','));
+        }
+
+        const res = await fetch(`/api/events?${queryParams.toString()}`);
+
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -83,7 +143,8 @@ export default function Home() {
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8"> {/* Keep padding for content */}
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+      {/* Search Section */}
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 mb-12"> {/* Added mb-12 for spacing */}
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
           Find Business Events & Hotels
         </h1>
@@ -161,15 +222,17 @@ export default function Home() {
                 placeholder="Select region (optional)"
               />
 
-              {/* Categories Multi-select Placeholder */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Categories
-                </label>
-                <div className="mt-1 p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 text-sm">
-                  Categories multi-select placeholder
-                </div>
-              </div>
+              {/* Categories Multi-select */}
+              <CategoryMultiSelect
+                selectedCategories={selectedCategories}
+                onChange={setSelectedCategories}
+              />
+
+              {/* Tags Multi-select */}
+              <TagMultiSelect
+                selectedTags={selectedTags}
+                onChange={setSelectedTags}
+              />
             </>
           )}
 
@@ -223,7 +286,7 @@ export default function Home() {
 
           <button
             onClick={handleSearch}
-            disabled={(activeTab === 'events' && !industry && !keywords && !region) || isLoading} // Disable only for events if no fields are filled
+            disabled={isLoading} // Disable button while loading
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300"
           >
             {getButtonLabel()}
@@ -244,11 +307,32 @@ export default function Home() {
               ))}
             </div>
           )}
-          {!isLoading && events.length === 0 && activeTab === 'events' && (industry || keywords || region) && ( // Show message only after search attempt on events tab
+          {!isLoading && events.length === 0 && activeTab === 'events' && (industry || keywords || region || selectedCategories.length > 0 || selectedTags.length > 0) && ( // Show message only after search attempt on events tab
             <p className="text-center text-gray-500 mt-8">No events found for the selected criteria.</p>
           )}
         </div>
       </div>
+
+      {/* Recommended Trips Section */}
+      {recommendedTrips.length > 0 && (
+        <div className="max-w-5xl mx-auto bg-gray-50 rounded-lg shadow-md p-6"> {/* Slightly different background */}
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Recommended Trips</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> {/* Responsive grid */}
+            {recommendedTrips.slice(0, 3).map(trip => ( // Display first 3-4 trips
+              <RecommendedTripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+          {recommendedTrips.length > 3 && ( // Show "See All" button if more than 3 trips
+            <div className="mt-8 text-center">
+              <Link href="/recommended-trips" passHref>
+                <button className="bg-indigo-600 text-white py-2 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                  See All Recommendations
+                </button>
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

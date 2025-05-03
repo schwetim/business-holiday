@@ -74,3 +74,15 @@ export interface Event {
   categories: Category[];
   tags: Tag[];
 }
+
+// Represents a Recommended Trip
+export interface RecommendedTrip {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  eventId: number; // Link to a potential event ID
+  destination: string;
+  dates: string;
+  accommodationSuggestion: string;
+}

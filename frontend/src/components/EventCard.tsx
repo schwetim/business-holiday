@@ -109,12 +109,35 @@ const EventCard: React.FC<EventCardProps> = ({ event, isExpanded, onToggle }) =>
                   alt={event.name} 
                   className="w-full h-48 object-cover rounded-md mb-3" 
                   // Basic error handling for images
-                  onError={(e) => (e.currentTarget.style.display = 'none')} 
+                  onError={(e) => (e.currentTarget.style.display = 'none')}
                 />
               )}
               {event.description && (
                 <p className="text-sm text-gray-700">{event.description}</p>
               )}
+
+              {/* Categories and Tags */}
+              {(((event.categories?.length ?? 0) > 0) || ((event.tags?.length ?? 0) > 0)) && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {event.categories?.map(category => (
+                    <span
+                      key={category.id}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                    >
+                      {category.name}
+                    </span>
+                  ))}
+                  {event.tags?.map(tag => (
+                    <span
+                      key={tag.id}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                    >
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <div className="text-sm">
                 <p><span className="font-medium">Address:</span> {event.street} {event.streetNumber}, {event.zipCode} {event.city}, {event.country}</p>
               </div>

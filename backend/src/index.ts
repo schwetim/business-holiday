@@ -42,10 +42,12 @@ app.use((err: ErrorWithStatus, req: Request, res: Response, next: NextFunction) 
 import eventRoutes from './routes/events';
 import accommodationRoutes from './routes/accommodations'; // Import accommodation routes
 import flightRoutes from './routes/flights'; // Import flight routes
+import recommendedTripsRoutes from './routes/recommendedTrips'; // Import recommended trips routes
 
 app.use('/api/events', eventRoutes);
 app.use('/api/accommodations', accommodationRoutes); // Use accommodation routes
 app.use('/api/flights', flightRoutes); // Use flight routes
+app.use('/api/recommended-trips', recommendedTripsRoutes); // Use recommended trips routes
 
 // Health check endpoint
 app.get('/api/health', (req: Request, res: Response) => {

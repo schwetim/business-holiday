@@ -78,3 +78,15 @@ export interface Flight {
   bookingLink: string; // Affiliate link (mock URL for now)
   // Add other relevant fields as needed: origin, destination, etc.
 }
+
+// Represents a Recommended Trip
+export interface RecommendedTrip {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  eventId: number; // Link to a potential event ID
+  destination: string;
+  dates: string;
+  accommodationSuggestion: string;
+}
