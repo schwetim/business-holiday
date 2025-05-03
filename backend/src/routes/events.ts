@@ -42,22 +42,87 @@ router.get('/industries', async (req: Request, res: Response) => {
   }
 });
 
+// Get all categories
+router.get('/categories', async (req: Request, res: Response) => {
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: {
+        name: 'asc'
+      }
+    });
+    res.json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+// Get all tags
+router.get('/tags', async (req: Request, res: Response) => {
+  try {
+    const tags = await prisma.tag.findMany({
+      orderBy: {
+        name: 'asc'
+      }
+    });
+    res.json(tags);
+  } catch (error) {
+    console.error('Error fetching tags:', error);
+    res.status(500).json({ error: 'Failed to fetch tags' });
+  }
+});
+
+
 // Get filtered events
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const { industry, region, startDate, endDate, destinationCity } = req.query;
-    
-    if (!industry) {
-      return res.status(400).json({ error: 'Industry parameter is required' });
+    const { industry, region, startDate, endDate, destinationCity, categories, tags, keywords } = req.query;
+
+    // Build the filter object
+    const filter: any = {
+      ...(industry && { industry: industry as string }),
+      ...(region && { region: region as string }),
+      ...(destinationCity && { city: destinationCity as string }),
+      ...(startDate && { startDate: { gte: new Date(startDate as string) } }),
+      ...(endDate && { endDate: { lte: new Date(endDate as string) } }),
+      ...(keywords && {
+        OR: [
+          { name: { contains: keywords as string, mode: 'insensitive' } },
+          { description: { contains: keywords as string, mode: 'insensitive' } },
+        ]
+      }),
+    };
+
+    // Add category filter if provided (expecting comma-separated IDs or names)
+    if (categories) {
+      const categoryNames = (categories as string).split(',').map(name => name.trim());
+      filter.categories = {
+        some: {
+          name: {
+            in: categoryNames
+          }
+        }
+      };
     }
 
+    // Add tag filter if provided (expecting comma-separated IDs or names)
+    if (tags) {
+      const tagNames = (tags as string).split(',').map(name => name.trim());
+      filter.tags = {
+        some: {
+          name: {
+            in: tagNames
+          }
+        }
+      };
+    }
+
+
     const events = await prisma.event.findMany({
-      where: {
-        industry: industry as string,
-        ...(region && { region: region as string }),
-        ...(destinationCity && { city: destinationCity as string }),
-        ...(startDate && { startDate: { gte: new Date(startDate as string) } }),
-        ...(endDate && { endDate: { lte: new Date(endDate as string) } })
+      where: filter,
+      include: { // Include categories and tags in the response
+        categories: true,
+        tags: true,
       }
     });
 
@@ -79,6 +144,10 @@ router.get('/:id', async (req: Request, res: Response) => {
 
     const event = await prisma.event.findUnique({
       where: { id: eventId },
+      include: { // Include categories and tags in the response
+        categories: true,
+        tags: true,
+      }
     });
 
     if (!event) {

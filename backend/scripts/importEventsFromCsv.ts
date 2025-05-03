@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Category, Tag } from '@prisma/client'; // Import Category and Tag
 import csv from 'csv-parser';
 
 const prisma = new PrismaClient();
@@ -11,6 +11,9 @@ interface EventCsvRow {
   name: string;
   description?: string;
   industry: string;
+  // Add columns for categories and tags if they are included in the CSV
+  // categories?: string; // e.g., comma-separated list of category names
+  // tags?: string; // e.g., comma-separated list of tag names
   country: string;
   city: string;
   region: string;
@@ -63,12 +66,48 @@ function validateRow(row: EventCsvRow, rowIndex: number): boolean {
   return true;
 }
 
+async function ensureCategoriesAndTagsExist(categoryNames: string[], tagNames: string[]) {
+  const createdCategories: Category[] = [];
+  const createdTags: Tag[] = [];
+
+  console.log('Ensuring categories exist...');
+  for (const name of categoryNames) {
+    const category = await prisma.category.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+    createdCategories.push(category);
+    process.stdout.write(`\rCategory "${name}" ensured.`);
+  }
+  console.log('\nEnsuring tags exist...');
+  for (const name of tagNames) {
+    const tag = await prisma.tag.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+    createdTags.push(tag);
+    process.stdout.write(`\rTag "${name}" ensured.`);
+  }
+  console.log('\n');
+  return { createdCategories, createdTags };
+}
+
 async function runImport() {
   // Only run in development mode
   if (process.env.NODE_ENV !== 'development') {
     console.log('ℹ️ Skipping CSV import — not in development mode.');
     return;
   }
+
+  const commonCategories = ['Technology', 'Business', 'Marketing', 'Finance', 'Healthcare', 'Education', 'Arts', 'Science'];
+  const commonTags = ['Conference', 'Summit', 'Workshop', 'Exhibition', 'Networking', 'Innovation', 'Digital', 'Global'];
+
+  // Ensure categories and tags exist in the database
+  const { createdCategories, createdTags } = await ensureCategoriesAndTagsExist(commonCategories, commonTags);
+  const categoryMap = new Map(createdCategories.map(c => [c.name.toLowerCase(), c]));
+  const tagMap = new Map(createdTags.map(t => [t.name.toLowerCase(), t]));
 
   const csvPath = path.join(__dirname, '../import/events.csv');
   const results: EventCsvRow[] = [];
@@ -112,6 +151,24 @@ async function runImport() {
           ? `/images/${row.externalId}/${row.imageFileName}`
           : null;
 
+        // Simple logic to assign categories and tags based on industry or keywords
+        // This is a placeholder; more sophisticated mapping might be needed
+        const assignedCategories: Category[] = [];
+        const assignedTags: Tag[] = [];
+
+        // Example: Assign category based on industry
+        const industryCategory = categoryMap.get(row.industry.toLowerCase());
+        if (industryCategory) {
+          assignedCategories.push(industryCategory);
+        }
+
+        // Example: Assign tags based on keywords in name/description
+        // if (row.name.toLowerCase().includes('conference')) {
+        //   const conferenceTag = tagMap.get('conference');
+        //   if (conferenceTag) assignedTags.push(conferenceTag);
+        // }
+        // Add more logic here based on your CSV data or desired mapping
+
         // Check for existing event
         const existing = await prisma.event.findUnique({
           where: { externalId: row.externalId },
@@ -139,6 +196,14 @@ async function runImport() {
               websiteUrl: row.websiteUrl,
               ticketPrice: row.ticketPrice ? parseFloat(row.ticketPrice) : null,
               imagePath,
+              categories: {
+                connect: assignedCategories.map(c => ({ id: c.id })),
+              },
+              tags: {
+                connect: assignedTags.map(t => ({ id: t.id })),
+              },
+              // If categories/tags were in CSV, parse and connect them here
+              // categories: { connect: row.categories?.split(',').map(name => ({ name: name.trim() })) || [] },
             },
           });
           successCount++;

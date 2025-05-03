@@ -39,6 +39,8 @@ model Event {
   // Relations
   clickLogs     ClickLog[]
   bookings      Booking[]
+  categories  Category[]
+  tags        Tag[]
 
   @@map("events")
 }
@@ -64,4 +66,20 @@ model Booking {
   event         Event    @relation(fields: [eventId], references: [id])
 
   @@map("bookings")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  events      Event[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  events      Event[]
+
+  @@map("tags")
 }

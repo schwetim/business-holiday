@@ -28,3 +28,49 @@ export interface Flight {
 }
 
 // Add other backend-specific types here if necessary
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+}
+
+// Represents an Event, including categories and tags
+export interface Event {
+  id: number;
+  externalId?: string | null;
+  name: string;
+  description?: string | null;
+  industry: string;
+
+  // Address fields
+  country: string;
+  city: string;
+  region?: string | null;
+  zipCode: string;
+  street: string;
+  streetNumber: string;
+
+  // Location display and coordinates
+  location: string;
+  latitude?: number | null;
+  longitude?: number | null;
+
+  // Event details
+  startDate: string;
+  endDate: string;
+  websiteUrl?: string | null;
+  ticketPrice?: number | string | null;
+  imagePath?: string | null;
+
+  // Metadata
+  createdAt: string;
+
+  // New relations
+  categories: Category[];
+  tags: Tag[];
+}
