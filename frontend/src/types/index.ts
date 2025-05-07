@@ -13,6 +13,11 @@ export interface IndustryWithCount {
   count: number;
 }
 
+export interface CountryWithCount {
+  country: string;
+  count: number;
+}
+
 // Corresponds to the Event model in Prisma, assuming the API returns all fields
 export interface Event {
   id: number;

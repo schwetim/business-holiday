@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { api } from '../services/api'; // Import api service
 import { Flight } from '../types'; // Import Flight type
 import FlightCard from '../components/FlightCard'; // Import FlightCard component
+import AirportAutosuggest from '../components/AirportAutosuggest'; // Import AirportAutosuggest component
 import { parseDateString, formatDateToISO } from '../utils/dateUtils'; // Import date utilities
 
 const TransportationPage: React.FC = () => {
@@ -131,11 +132,10 @@ const TransportationPage: React.FC = () => {
       <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-lg p-4">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Find Flights</h2>
         <div className="flex flex-col md:flex-row gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="Starting location (e.g., London)"
+          <AirportAutosuggest
             value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
+            onChange={setOrigin}
+            placeholder="Starting location (e.g., London)"
             className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button

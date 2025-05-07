@@ -4,6 +4,34 @@ import { PrismaClient } from '@prisma/client';
 const router = Router();
 const prisma = new PrismaClient();
 
+// Get countries with event counts
+router.get('/countries-with-count', async (req: Request, res: Response) => {
+  try {
+    const countriesWithCount = await prisma.event.groupBy({
+      by: ['country'],
+      _count: {
+        country: true,
+      },
+      orderBy: {
+        _count: {
+          country: 'desc', // Order by count descending
+        },
+      },
+    });
+
+    // Format the result
+    const formattedResult = countriesWithCount.map(item => ({
+      country: item.country,
+      count: item._count.country,
+    }));
+
+    res.json(formattedResult);
+  } catch (error) {
+    console.error('Error fetching countries with count:', error);
+    res.status(500).json({ error: 'Failed to fetch countries with count' });
+  }
+});
+
 // Get unique cities from events
 router.get('/cities', async (req: Request, res: Response) => {
   try {

@@ -7,7 +7,13 @@ import TagMultiSelect from '../components/TagMultiSelect'; // Import the new com
 import Link from 'next/link'; // Import Link for navigation
 import RecommendedTripCard from '../components/RecommendedTripCard'; // Import the new component
 import CategoryBrowseGrid from '../components/CategoryBrowseGrid'; // Import the new component
-import { Event, Category, Tag, RecommendedTrip } from '../types'; // Import the shared types
+import { Event, Category, Tag, RecommendedTrip, CountryWithCount } from '../types'; // Import the shared types
+import { api } from '../services/api'; // Import the API service
+import DatePicker, { registerLocale } from 'react-datepicker'; // Import DatePicker
+import 'react-datepicker/dist/react-datepicker.css'; // Import the styles
+import { enGB } from 'date-fns/locale'; // Import a locale
+
+registerLocale('en-GB', enGB); // Register the locale
 
 // Removed the old inline Event interface
 
@@ -23,6 +29,13 @@ export default function Home() {
   const [recommendedTrips, setRecommendedTrips] = useState<RecommendedTrip[]>([]); // New state for recommended trips
   const [isLoading, setIsLoading] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState<number | null>(null); // State for expanded card
+
+  // State for Destination tab
+  const [countries, setCountries] = useState<CountryWithCount[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
 
   // Fetch industries on mount
   useEffect(() => {
@@ -61,6 +74,19 @@ export default function Home() {
         setRecommendedTrips([]);
       });
   }, []);
+
+  // Fetch countries with event counts on mount for Destination tab
+  useEffect(() => {
+    api.getCountriesWithEventCounts()
+      .then(data => {
+        setCountries(data);
+      })
+      .catch(error => {
+        console.error('Error fetching countries:', error);
+        setCountries([]);
+      });
+  }, []); // Empty dependency array means this runs once on mount
+
 
   const handleSearch = async () => {
     if (activeTab === 'events') {
@@ -121,8 +147,12 @@ export default function Home() {
     }
     // Placeholder search logic for other tabs
     else if (activeTab === 'destinations') {
-      console.log('Searching destinations...');
-      // Add placeholder logic here
+      console.log('Searching destinations with:', {
+        country: selectedCountry,
+        startDate: startDate,
+        endDate: endDate,
+      });
+      // Add actual search logic here if needed later
     } else if (activeTab === 'dates') {
       console.log('Searching dates...');
       // Add placeholder logic here
@@ -188,26 +218,30 @@ export default function Home() {
         <div className="space-y-6">
           {activeTab === 'events' && (
             <>
-
-              <IndustrySelect
-                value={industry}
-                onChange={setIndustry}
-              />
-
-              <SelectField
-                label="Region"
-                value={region}
-                onChange={setRegion}
-                options={[
-                  { value: 'Europe', label: 'Europe' },
-                  { value: 'Asia', label: 'Asia' },
-                  { value: 'North America', label: 'North America' },
-                  { value: 'South America', label: 'South America' },
-                  { value: 'Africa', label: 'Africa' },
-                  { value: 'Oceania', label: 'Oceania' },
-                ]}
-                placeholder="Select region (optional)"
-              />
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <IndustrySelect
+                    value={industry}
+                    onChange={setIndustry}
+                  />
+                </div>
+                <div className="flex-1">
+                  <SelectField
+                    label="Region"
+                    value={region}
+                    onChange={setRegion}
+                    options={[
+                      { value: 'Europe', label: 'Europe' },
+                      { value: 'Asia', label: 'Asia' },
+                      { value: 'North America', label: 'North America' },
+                      { value: 'South America', label: 'South America' },
+                      { value: 'Africa', label: 'Africa' },
+                      { value: 'Oceania', label: 'Oceania' },
+                    ]}
+                    placeholder="Select region (optional)"
+                  />
+                </div>
+              </div>
 
               {/* Categories Multi-select */}
               <CategoryMultiSelect
@@ -225,23 +259,46 @@ export default function Home() {
 
           {activeTab === 'destinations' && (
             <>
-              {/* Country/Region Dropdown Placeholder */}
+              {/* Country/Region Dropdown */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Country / Region
                 </label>
-                <div className="mt-1 p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 text-sm">
-                  Country/Region dropdown placeholder
-                </div>
+                <select
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  value={selectedCountry}
+                  onChange={(e) => setSelectedCountry(e.target.value)}
+                >
+                  <option value="">Select a country</option>
+                  {countries.map(country => (
+                    <option key={country.country} value={country.country}>
+                      {country.country} ({country.count} events)
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              {/* Date Range Picker Placeholder */}
+              {/* Date Range Picker */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Date Range
+                  Date Range (Optional)
                 </label>
-                <div className="mt-1 p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 text-sm">
-                  Date range picker placeholder
+                <div className="mt-1">
+                  <DatePicker
+                    selectsRange={true}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={(update: [Date | null, Date | null]) => {
+                      const [newStartDate, newEndDate] = update;
+                      setStartDate(newStartDate);
+                      setEndDate(newEndDate);
+                    }}
+                    isClearable={true}
+                    placeholderText="Select a date range"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    dateFormat="yyyy/MM/dd"
+                    locale="en-GB"
+                  />
                 </div>
               </div>
             </>

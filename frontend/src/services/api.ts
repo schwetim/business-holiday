@@ -3,7 +3,7 @@
  * Uses Next.js API routes to proxy requests in development
  */
 
-import { Accommodation, Event, Flight, IndustryWithCount, SearchResults } from '../types'; // Import types
+import { Accommodation, Event, Flight, IndustryWithCount, SearchResults, CountryWithCount } from '../types'; // Import types
 
 // Determine environment-specific base URL
 const getBaseUrl = (): string => {
@@ -55,6 +55,21 @@ export const api = {
       return await response.json();
     } catch (error) {
       return handleApiError(error, 'industries-with-count');
+    }
+  },
+
+  /**
+   * Get countries with event counts
+   */
+  getCountriesWithEventCounts: async (): Promise<CountryWithCount[]> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/events/countries-with-count`);
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, 'countries-with-count');
     }
   },
 

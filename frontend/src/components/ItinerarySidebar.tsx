@@ -49,17 +49,26 @@ const ItinerarySidebar: React.FC<ItinerarySidebarProps> = ({
   const getDayClassName = (date: Date): string | null => {
     let className = '';
 
-    // Highlight selected range
+    // Check if date is within event dates
+    const isEventDate = isWithinInterval(date, {
+      start: parsedEventStartDate,
+      end: parsedEventEndDate
+    });
+
+    if (isEventDate) {
+      className += ' bg-green-200'; // Event dates with green background
+    }
+
+    // Then check if date is within selected range
     if (startDate && endDate && date >= startDate && date <= endDate) {
-      className += ' bg-blue-200';
+      if (isEventDate) {
+        // If date is both event date and selected date, use a special class
+        className += ' bg-blue-200 border-2 border-green-400';
+      } else {
+        className += ' bg-blue-200'; // Selected dates with blue background
+      }
     }
 
-    // Highlight event dates
-    if (isWithinInterval(date, { start: parsedEventStartDate, end: parsedEventEndDate })) {
-       className += ' bg-green-200'; // Use a different color for event dates
-    }
-
-    // Combine classes, trim whitespace
     return className.trim() || null;
   };
 
