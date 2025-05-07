@@ -7,7 +7,7 @@ const HeroBanner = () => {
       <div
         className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90 z-0"
         style={{
-          backgroundImage: 'url(/assets/images/heroBanner.png)',
+          backgroundImage: 'url(/images/heroBanner.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           mixBlendMode: 'overlay',
