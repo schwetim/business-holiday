@@ -188,20 +188,6 @@ export default function Home() {
         <div className="space-y-6">
           {activeTab === 'events' && (
             <>
-              {/* Keywords/Event Name */}
-              <div>
-                <label htmlFor="keywords" className="block text-sm font-medium text-gray-700">
-                  Keywords / Event Name
-                </label>
-                <input
-                  type="text"
-                  id="keywords"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
-                  placeholder="e.g., Tech Conference, Marketing Summit"
-                />
-              </div>
 
               <IndustrySelect
                 value={industry}

@@ -5,14 +5,21 @@ import Footer from '@/components/Footer';
 import TopNavbar from '@/components/TopNavbar';
 import ProgressIndicator from '@/components/ProgressIndicator'; // Import the ProgressIndicator
 import { AuthProvider } from '@/context/AuthContext';
+import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  // Show progress indicator only on booking flow pages
+  const showProgressIndicator = ['/accommodation', '/transportation', '/results'].includes(router.pathname) ||
+    (router.pathname === '/' && router.query.eventId !== undefined);
+
   return (
     <AuthProvider>
       <TopNavbar />
       <HeroBanner />
-      <ProgressIndicator /> {/* Add the progress indicator */}
-      <main className="container mx-auto px-4 pb-6"> {/* Adjusted padding */}
+      {showProgressIndicator && <ProgressIndicator />}
+      <main className="container mx-auto px-4 pb-6">
         <Component {...pageProps} />
       </main>
       <Footer />

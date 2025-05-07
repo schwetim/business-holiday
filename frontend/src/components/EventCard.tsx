@@ -12,8 +12,8 @@ const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 interface EventCardProps {
   event: Event;
-  isExpanded: boolean;
-  onToggle: () => void;
+  isExpanded?: boolean; // Make optional
+  onToggle?: () => void; // Make optional
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, isExpanded, onToggle }) => {
@@ -27,7 +27,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, isExpanded, onToggle }) =>
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click if icon is clicked
-    onToggle();
+    if (onToggle) { // Check if onToggle is defined
+      onToggle();
+    }
   };
 
   // Function to handle event selection
