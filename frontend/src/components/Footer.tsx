@@ -11,7 +11,13 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center mb-4">
               {/* Placeholder Logo */}
-              <Image src="/images/BH_logo_128X128.png" alt="Business Holiday Booking Logo" width={40} height={40} />
+              <Image
+                src="/images/BH_logo_128X128.png"
+                alt="Business Holiday Booking Logo"
+                width={128}
+                height={128}
+                // Removed the size constraints to use original dimensions
+              />
               <span className="ml-2 text-xl font-bold text-white">Business Holiday Booking</span>
             </div>
             <p className="text-sm">

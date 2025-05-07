@@ -41,7 +41,11 @@ const RecommendedTripsPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">All Recommended Trips</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-3 text-center">All Recommended Trips</h1>
+        <p className="text-lg text-gray-600 mb-8 text-center max-w-3xl mx-auto">
+          Handpicked Event and Accommodation Packages to Maximize Your Business Travel
+        </p>
+        {/* Rest of the page content */}
 
         {/* Filtering and Sorting UI - Placeholder */}
         <div className="mb-8 flex flex-wrap justify-center gap-4">

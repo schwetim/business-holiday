@@ -175,7 +175,7 @@ export default function Home() {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8"> {/* Keep padding for content */}
       {/* Search Section */}
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 mb-12"> {/* Added mb-12 for spacing */}
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-12"> {/* Changed from max-w-md to max-w-3xl */}
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
           Find Business Events & Hotels
         </h1>
@@ -218,7 +218,7 @@ export default function Home() {
         <div className="space-y-6">
           {activeTab === 'events' && (
             <>
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col md:flex-row gap-6"> {/* Increased gap from gap-4 to gap-6 */}
                 <div className="flex-1">
                   <IndustrySelect
                     value={industry}
@@ -258,74 +258,100 @@ export default function Home() {
           )}
 
           {activeTab === 'destinations' && (
-            <>
-              {/* Country/Region Dropdown */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Country / Region
-                </label>
-                <select
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  value={selectedCountry}
-                  onChange={(e) => setSelectedCountry(e.target.value)}
-                >
-                  <option value="">Select a country</option>
-                  {countries.map(country => (
-                    <option key={country.country} value={country.country}>
-                      {country.country} ({country.count} events)
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Date Range Picker */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Date Range (Optional)
-                </label>
-                <div className="mt-1">
-                  <DatePicker
-                    selectsRange={true}
-                    startDate={startDate}
-                    endDate={endDate}
-                    onChange={(update: [Date | null, Date | null]) => {
-                      const [newStartDate, newEndDate] = update;
-                      setStartDate(newStartDate);
-                      setEndDate(newEndDate);
-                    }}
-                    isClearable={true}
-                    placeholderText="Select a date range"
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                    dateFormat="yyyy/MM/dd"
-                    locale="en-GB"
-                  />
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex-1">
+                {/* Country/Region Dropdown */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Country / Region
+                  </label>
+                  <select
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" // Added h-10 to match Industry dropdown height
+                    value={selectedCountry}
+                    onChange={(e) => setSelectedCountry(e.target.value)}
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map(country => (
+                      <option key={country.country} value={country.country}>
+                        {country.country} ({country.count} events)
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-            </>
+
+              <div className="flex-1">
+                {/* Date Range Picker */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Date Range (Optional)
+                  </label>
+                  <div className="mt-1">
+                    <DatePicker
+                      selectsRange={true}
+                      startDate={startDate}
+                      endDate={endDate}
+                      onChange={(update: [Date | null, Date | null]) => {
+                        const [newStartDate, newEndDate] = update;
+                        setStartDate(newStartDate);
+                        setEndDate(newEndDate);
+                      }}
+                      isClearable={true}
+                      placeholderText="Select a date range"
+                      className="block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" // Added h-10
+                      dateFormat="yyyy/MM/dd"
+                      locale="en-GB"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
 
           {activeTab === 'dates' && (
-            <>
-              {/* Date Range Picker Placeholder */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Date Range
-                </label>
-                <div className="mt-1 p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 text-sm">
-                  Date range picker placeholder
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex-1">
+                {/* Date Range Picker Placeholder */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Date Range
+                  </label>
+                  <div className="mt-1">
+                    {/* Replaced placeholder div with a button to trigger DatePicker */}
+                    <button
+                      className="mt-1 block w-full rounded-md border border-gray-300 bg-white h-10 px-3 text-left text-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                      // onClick={() => setShowDatePickerDatesTab(!showDatePickerDatesTab)} // Assuming a state variable for this tab's date picker
+                    >
+                      Select a date range {/* Placeholder text */}
+                    </button>
+                    {/* Date picker component will be added here */}
+                  </div>
                 </div>
               </div>
 
-              {/* Optional Destination Field Placeholder */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Optional Destination
-                </label>
-                <div className="mt-1 p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 text-sm">
-                  Optional destination field placeholder
+              <div className="flex-1">
+                {/* Optional Destination Field Placeholder */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Optional Destination
+                  </label>
+                  {/* Replaced placeholder div with a select field */}
+                  <select
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    // value={optionalDestination} // Assuming a state variable for this field
+                    // onChange={(e) => setOptionalDestination(e.target.value)} // Assuming a state setter
+                  >
+                    <option value="">Select a destination (optional)</option>
+                    {/* Assuming 'countries' state can be reused or a similar list is available */}
+                    {countries.map(country => (
+                      <option key={country.country} value={country.country}>
+                        {country.country}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-            </>
+            </div>
           )}
 
           <button

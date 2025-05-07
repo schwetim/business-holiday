@@ -276,11 +276,15 @@ const TopNavbar: React.FC = () => {
 
 
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <nav className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center"> {/* Use flex to align image and text if needed */}
-          <img src="/images/BH_logo_128X128.png" alt="Business Holiday Booking Logo" className="h-8 w-auto" /> {/* Adjust size as needed */}
+          <img
+            src="/images/BH_logo_128X128.png"
+            alt="Business Holiday Booking Logo"
+            className="h-16 w-16" // Increased from h-8 w-auto, removed mr-2
+          />
           {/* Optional: Add text next to logo if desired */}
           {/* <span className="ml-2 text-xl font-bold">ExtendMyTrip.com</span> */}
         </Link>
