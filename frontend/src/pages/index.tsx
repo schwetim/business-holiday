@@ -36,6 +36,11 @@ export default function Home() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
+  // State for Dates tab
+  const [startDateDatesTab, setStartDateDatesTab] = useState<Date | null>(null);
+  const [endDateDatesTab, setEndDateDatesTab] = useState<Date | null>(null);
+  const [optionalDestination, setOptionalDestination] = useState<string>('');
+
 
   // Fetch industries on mount
   useEffect(() => {
@@ -145,31 +150,73 @@ export default function Home() {
         setIsLoading(false);
       }
     }
-    // Placeholder search logic for other tabs
+    // Search logic for Destinations tab
     else if (activeTab === 'destinations') {
-      console.log('Searching destinations with:', {
-        country: selectedCountry,
-        startDate: startDate,
-        endDate: endDate,
-      });
-      // Add actual search logic here if needed later
-    } else if (activeTab === 'dates') {
-      console.log('Searching dates...');
-      // Add placeholder logic here
+      setIsLoading(true);
+      try {
+        const queryParams = new URLSearchParams();
+        if (selectedCountry) queryParams.append('region', selectedCountry); // Use 'region' parameter for country
+        if (startDate) queryParams.append('startDate', startDate.toISOString());
+        if (endDate) queryParams.append('endDate', endDate.toISOString());
+
+        const url = `/api/events?${queryParams.toString()}`;
+        console.log('Fetching events for destinations:', url); // Log the URL
+
+        const res = await fetch(url);
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new TypeError("Response is not JSON");
+        }
+        const data = await res.json();
+        console.log('Received data for destinations:', data); // Log the received data
+        setEvents(data); // Update events state with filtered results
+      } catch (error) {
+        console.error('Error fetching events for destinations:', error);
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    // Search logic for Dates tab
+    else if (activeTab === 'dates') {
+      setIsLoading(true);
+      try {
+        const queryParams = new URLSearchParams();
+        if (optionalDestination) queryParams.append('region', optionalDestination); // Use 'region' parameter for optional destination
+        if (startDateDatesTab) queryParams.append('startDate', startDateDatesTab.toISOString());
+        if (endDateDatesTab) queryParams.append('endDate', endDateDatesTab.toISOString());
+
+        const url = `/api/events?${queryParams.toString()}`;
+        console.log('Fetching events for dates tab:', url); // Log the URL
+
+        const res = await fetch(url);
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new TypeError("Response is not JSON");
+        }
+        const data = await res.json();
+        console.log('Received data for dates tab:', data); // Log the received data
+        setEvents(data); // Update events state with filtered results
+      } catch (error) {
+        console.error('Error fetching events for dates tab:', error);
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const getButtonLabel = () => {
-    switch (activeTab) {
-      case 'events':
-        return isLoading ? 'Searching Events...' : 'Show me upcoming events';
-      case 'destinations':
-        return 'Explore Destinations';
-      case 'dates':
-        return 'Find by Date';
-      default:
-        return 'Search';
-    }
+    // Rename button for all tabs
+    return isLoading ? 'Searching Events...' : 'Find Events';
   };
 
   return (
@@ -311,35 +358,41 @@ export default function Home() {
           {activeTab === 'dates' && (
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1">
-                {/* Date Range Picker Placeholder */}
+                {/* Date Range Picker */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Date Range
                   </label>
                   <div className="mt-1">
-                    {/* Replaced placeholder div with a button to trigger DatePicker */}
-                    <button
-                      className="mt-1 block w-full rounded-md border border-gray-300 bg-white h-10 px-3 text-left text-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                      // onClick={() => setShowDatePickerDatesTab(!showDatePickerDatesTab)} // Assuming a state variable for this tab's date picker
-                    >
-                      Select a date range {/* Placeholder text */}
-                    </button>
-                    {/* Date picker component will be added here */}
+                    <DatePicker
+                      selectsRange={true}
+                      startDate={startDateDatesTab}
+                      endDate={endDateDatesTab}
+                      onChange={(update: [Date | null, Date | null]) => {
+                        const [newStartDate, newEndDate] = update;
+                        setStartDateDatesTab(newStartDate);
+                        setEndDateDatesTab(newEndDate);
+                      }}
+                      isClearable={true}
+                      placeholderText="Select a date range"
+                      className="block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                      dateFormat="yyyy/MM/dd"
+                      locale="en-GB"
+                    />
                   </div>
                 </div>
               </div>
 
               <div className="flex-1">
-                {/* Optional Destination Field Placeholder */}
+                {/* Optional Destination Field */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Optional Destination
                   </label>
-                  {/* Replaced placeholder div with a select field */}
                   <select
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                    // value={optionalDestination} // Assuming a state variable for this field
-                    // onChange={(e) => setOptionalDestination(e.target.value)} // Assuming a state setter
+                    value={optionalDestination}
+                    onChange={(e) => setOptionalDestination(e.target.value)}
                   >
                     <option value="">Select a destination (optional)</option>
                     {/* Assuming 'countries' state can be reused or a similar list is available */}

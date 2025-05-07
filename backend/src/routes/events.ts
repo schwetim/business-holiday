@@ -136,7 +136,8 @@ router.get('/', async (req: Request, res: Response) => {
     // Build the filter object
     const filter: any = {
       ...(industry && { industry: industry as string }),
-      ...(region && { region: region as string }),
+      // Filter by 'country' field when 'region' query param is provided
+      ...(region && { country: region as string }),
       ...(destinationCity && { city: destinationCity as string }),
       ...(startDate && { startDate: { gte: new Date(startDate as string) } }),
       ...(endDate && { endDate: { lte: new Date(endDate as string) } }),
