@@ -131,23 +131,36 @@ router.get('/tags', async (req: Request, res: Response) => {
 // Get filtered events
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const { industry, region, startDate, endDate, destinationCity, categories, tags, keywords } = req.query;
+    const { industry, region, country, startDate, endDate, destinationCity, categories, tags, keywords } = req.query;
 
     // Build the filter object
-    const filter: any = {
-      ...(industry && { industry: industry as string }),
-      // Filter by 'country' field when 'region' query param is provided
-      ...(region && { country: region as string }),
-      ...(destinationCity && { city: destinationCity as string }),
-      ...(startDate && { startDate: { gte: new Date(startDate as string) } }),
-      ...(endDate && { endDate: { lte: new Date(endDate as string) } }),
-      ...(keywords && {
-        OR: [
-          { name: { contains: keywords as string, mode: 'insensitive' } },
-          { description: { contains: keywords as string, mode: 'insensitive' } },
-        ]
-      }),
-    };
+    const filter: any = {};
+
+    if (industry) filter.industry = industry as string;
+    if (region) filter.region = region as string;
+    if (country) filter.country = country as string; // Use 'country' for country filtering
+    if (destinationCity) filter.city = destinationCity as string;
+
+    // Date overlap logic
+    if (startDate && endDate) {
+      filter.AND = [
+        { startDate: { lte: new Date(endDate as string) } }, // Event starts before or on search end date
+        { endDate: { gte: new Date(startDate as string) } }  // Event ends after or on search start date
+      ];
+    } else if (startDate) {
+      filter.startDate = { gte: new Date(startDate as string) };
+    } else if (endDate) {
+      filter.endDate = { lte: new Date(endDate as string) };
+    }
+
+    if (keywords) {
+      filter.OR = [
+        { name: { contains: keywords as string, mode: 'insensitive' } },
+        { description: { contains: keywords as string, mode: 'insensitive' } },
+      ];
+    }
+
+    console.log('Applied filters:', filter); // Debug log
 
     // Add category filter if provided (expecting comma-separated IDs or names)
     if (categories) {

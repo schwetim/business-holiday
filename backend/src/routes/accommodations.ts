@@ -59,4 +59,27 @@ router.get('/', (req: Request, res: Response) => {
   }
 });
 
+// GET /api/accommodations/:id
+router.get('/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  // Re-use the mock data generation logic to find a specific hotel
+  const mockHotels = [
+    { id: 'hotel1', name: `Grand Hotel`, price: 150, currency: 'EUR', rating: 4.5, imageUrl: `/mock-images/hotel1.jpg`, bookingLink: '#' },
+    { id: 'hotel2', name: `Central Inn`, price: 95, currency: 'EUR', rating: 3.8, imageUrl: `/mock-images/hotel2.jpg`, bookingLink: '#' },
+    { id: 'hotel3', name: `Riverside Suites`, price: 210, currency: 'EUR', rating: 4.8, imageUrl: null, bookingLink: '#' },
+    { id: 'hotel4', name: `Budget Stay`, price: 'Contact for price', currency: 'EUR', rating: 3.0, imageUrl: `/mock-images/hotel4.jpg`, bookingLink: '#' },
+  ];
+
+  const foundHotel = mockHotels.find(hotel => hotel.id === id);
+
+  if (foundHotel) {
+    // For a single hotel, we don't need to calculate total price based on dates,
+    // as the context is just displaying the selected accommodation.
+    res.json(foundHotel);
+  } else {
+    res.status(404).json({ message: `Accommodation with ID ${id} not found` });
+  }
+});
+
 export default router;

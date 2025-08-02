@@ -172,26 +172,6 @@ const AccommodationPage: React.FC = () => {
 
   return (
     <> {/* Use Fragment to avoid extra div */}
-      {/* Selected Event Details Section */}
-      <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-lg max-w-xl mx-auto">
-        <div className="container mx-auto px-4 py-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Selected Event:</h2>
-          {loadingEvent && <p>Loading event details...</p>}
-          {eventError && <p className="text-red-500">{eventError}</p>}
-          {selectedEvent && !loadingEvent && !eventError && (
-            <div>
-              <p className="text-xl font-bold text-indigo-700">{selectedEvent.name}</p>
-              <p className="text-sm text-gray-600">
-                {selectedEvent.city}, {selectedEvent.country} {selectedEvent.region ? `(${selectedEvent.region})` : ''}
-              </p>
-              <p className="text-sm text-gray-500">
-                {formatEventDateRange(selectedEvent.startDate, selectedEvent.endDate)}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* Main content area with sidebar */}
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Sidebar Column */}

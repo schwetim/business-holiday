@@ -155,6 +155,26 @@ export const api = {
   },
 
   /**
+   * Get a single accommodation by its ID
+   */
+  getAccommodationById: async (id: string | number): Promise<Accommodation | null> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/accommodations/${id}`);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null; // Return null if accommodation not found
+        }
+        throw new Error(`API returned status ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, `accommodation/${id}`);
+    }
+  },
+
+  /**
    * Get flights filtered by criteria
    */
   getFlights: async (params: {

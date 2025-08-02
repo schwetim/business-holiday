@@ -155,9 +155,9 @@ export default function Home() {
       setIsLoading(true);
       try {
         const queryParams = new URLSearchParams();
-        if (selectedCountry) queryParams.append('region', selectedCountry); // Use 'region' parameter for country
-        if (startDate) queryParams.append('startDate', startDate.toISOString());
-        if (endDate) queryParams.append('endDate', endDate.toISOString());
+        if (selectedCountry) queryParams.append('country', selectedCountry); // Use 'country' parameter for country
+        if (startDate) queryParams.append('startDate', startDate.toISOString().split('T')[0]);
+        if (endDate) queryParams.append('endDate', endDate.toISOString().split('T')[0]);
 
         const url = `/api/events?${queryParams.toString()}`;
         console.log('Fetching events for destinations:', url); // Log the URL
