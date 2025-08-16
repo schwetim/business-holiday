@@ -1,7 +1,6 @@
 # .gitignore - Business Holiday Booking Platform
 
 # Docs
-docs/
 cline_docs/
 .clinerules
 
