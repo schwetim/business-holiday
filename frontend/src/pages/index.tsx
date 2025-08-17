@@ -106,16 +106,15 @@ export default function Home() {
           queryParams.append('tags', selectedTagNames.join(','));
         }
 
-        const res = await fetch(`/api/events?${queryParams.toString()}`);
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new TypeError("Response is not JSON");
-        }
-        const data = await res.json();
+        const data = await api.getEvents({
+          industry: industry || '',
+          region: region || '',
+          startDate: startDate?.toISOString() || '',
+          endDate: endDate?.toISOString() || '',
+          categories: selectedCategoryNames.length > 0 ? selectedCategoryNames.join(',') : undefined,
+          tags: selectedTagNames.length > 0 ? selectedTagNames.join(',') : undefined,
+          keywords: keywords || ''
+        });
         setEvents(data);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -133,19 +132,13 @@ export default function Home() {
         if (startDate) queryParams.append('startDate', startDate.toISOString().split('T')[0]);
         if (endDate) queryParams.append('endDate', endDate.toISOString().split('T')[0]);
 
-        const url = `/api/events?${queryParams.toString()}`;
-        console.log('Fetching events for destinations:', url); // Log the URL
+        console.log('Fetching events for destinations:', queryParams.toString()); // Log the URL
 
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new TypeError("Response is not JSON");
-        }
-        const data = await res.json();
+        const data = await api.getEvents({
+          country: selectedCountry || undefined,
+          startDate: startDate?.toISOString().split('T')[0] || undefined,
+          endDate: endDate?.toISOString().split('T')[0] || undefined
+        });
         console.log('Received data for destinations:', data); // Log the received data
         setEvents(data); // Update events state with filtered results
       } catch (error) {
@@ -164,19 +157,13 @@ export default function Home() {
         if (startDateDatesTab) queryParams.append('startDate', startDateDatesTab.toISOString());
         if (endDateDatesTab) queryParams.append('endDate', endDateDatesTab.toISOString());
 
-        const url = `/api/events?${queryParams.toString()}`;
-        console.log('Fetching events for dates tab:', url); // Log the URL
+        console.log('Fetching events for dates tab:', queryParams.toString()); // Log the URL
 
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new TypeError("Response is not JSON");
-        }
-        const data = await res.json();
+        const data = await api.getEvents({
+          region: optionalDestination || undefined,
+          startDate: startDateDatesTab?.toISOString() || undefined,
+          endDate: endDateDatesTab?.toISOString() || undefined
+        });
         console.log('Received data for dates tab:', data); // Log the received data
         setEvents(data); // Update events state with filtered results
       } catch (error) {

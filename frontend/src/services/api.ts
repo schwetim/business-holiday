@@ -78,18 +78,27 @@ export const api = {
    * Get events filtered by criteria
    */
   getEvents: async (params: {
-    industry: string,
+    industry?: string,
     region?: string,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    categories?: string,
+    tags?: string,
+    country?: string,
+    keywords?: string
   }): Promise<any[]> => {
     try {
       const queryParams = new URLSearchParams();
       
       // Add only non-empty parameters
-      Object.entries(params).forEach(([key, value]) => {
-        if (value) queryParams.append(key, value);
-      });
+      if (params.industry) queryParams.append('industry', params.industry);
+      if (params.region) queryParams.append('region', params.region);
+      if (params.startDate) queryParams.append('startDate', params.startDate);
+      if (params.endDate) queryParams.append('endDate', params.endDate);
+      if (params.categories) queryParams.append('categories', params.categories);
+      if (params.tags) queryParams.append('tags', params.tags);
+      if (params.country) queryParams.append('country', params.country);
+      if (params.keywords) queryParams.append('keywords', params.keywords);
       
       const response = await fetch(`${getBaseUrl()}/api/events?${queryParams}`);
       
