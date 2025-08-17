@@ -7,13 +7,14 @@ import { Accommodation, Event, Flight, IndustryWithCount, SearchResults, Country
 
 // Determine environment-specific base URL
 const getBaseUrl = (): string => {
-  // In production (Vercel), use the environment variable
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.NEXT_PUBLIC_API_URL || '';
-  }
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? process.env.NEXT_PUBLIC_API_URL || '' 
+    : '';
   
-  // In development, use relative path (Next.js API routing)
-  return '';
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+  console.log('getBaseUrl() returning:', baseUrl);
+  return baseUrl;
 };
 
 // Unified API error handler
