@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tag } from '../types'; // Assuming Tag type is available in shared types
+import { api } from '../services/api';
 
 interface TagMultiSelectProps {
   selectedTags: number[];
@@ -13,13 +14,7 @@ const TagMultiSelect: React.FC<TagMultiSelectProps> = ({ selectedTags, onChange 
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('/api/events/tags')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
+    api.getTags()
       .then((data: Tag[]) => {
         setTags(data);
         setError(null);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import RecommendedTripCard from '../components/RecommendedTripCard'; // Import the component
 import { RecommendedTrip } from '../types'; // Import the type
 import Link from 'next/link'; // Import Link
+import { api } from '../services/api';
 
 const RecommendedTripsPage: React.FC = () => {
   const [recommendedTrips, setRecommendedTrips] = useState<RecommendedTrip[]>([]);
@@ -17,13 +18,7 @@ const RecommendedTripsPage: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     // TODO: Implement actual filtering and sorting in the backend API call
-    fetch('/api/recommended-trips')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
+    api.getRecommendedTrips()
       .then((data: RecommendedTrip[]) => {
         setRecommendedTrips(data);
         setError(null);

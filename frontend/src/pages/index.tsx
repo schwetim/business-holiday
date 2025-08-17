@@ -64,13 +64,7 @@ export default function Home() {
 
   // Fetch recommended trips on mount
   useEffect(() => {
-    fetch('/api/recommended-trips')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
+    api.getRecommendedTrips()
       .then((data: RecommendedTrip[]) => {
         setRecommendedTrips(data);
       })
@@ -99,18 +93,8 @@ export default function Home() {
       setIsLoading(true);
       try {
         // Fetch categories and tags to map selected IDs to names for the API call
-        const categoriesRes = await fetch('/api/events/categories');
-        const tagsRes = await fetch('/api/events/tags');
-
-        if (!categoriesRes.ok) {
-           throw new Error(`HTTP error! status: ${categoriesRes.status}`);
-        }
-         if (!tagsRes.ok) {
-           throw new Error(`HTTP error! status: ${tagsRes.status}`);
-        }
-
-        const allCategories: Category[] = await categoriesRes.json();
-        const allTags: Tag[] = await tagsRes.json();
+        const allCategories: Category[] = await api.getCategories();
+        const allTags: Tag[] = await api.getTags();
 
         const selectedCategoryNames = allCategories
           .filter(cat => selectedCategories.includes(cat.id))

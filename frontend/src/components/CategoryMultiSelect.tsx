@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Category } from '../types'; // Assuming Category type is available in shared types
+import { api } from '../services/api';
 
 interface CategoryMultiSelectProps {
   selectedCategories: number[];
@@ -13,13 +14,7 @@ const CategoryMultiSelect: React.FC<CategoryMultiSelectProps> = ({ selectedCateg
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('/api/events/categories')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
+    api.getCategories()
       .then((data: Category[]) => {
         setCategories(data);
         setError(null);

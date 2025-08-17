@@ -3,7 +3,7 @@
  * Uses Next.js API routes to proxy requests in development
  */
 
-import { Accommodation, Event, Flight, IndustryWithCount, SearchResults, CountryWithCount } from '../types'; // Import types
+import { Accommodation, Event, Flight, IndustryWithCount, SearchResults, CountryWithCount, Category, Tag, RecommendedTrip } from '../types'; // Import types
 
 // Determine environment-specific base URL
 const getBaseUrl = (): string => {
@@ -219,6 +219,51 @@ export const api = {
       return await response.json();
     } catch (error) {
       return handleApiError(error, 'search');
+    }
+  },
+
+  /**
+   * Get all categories
+   */
+  getCategories: async (): Promise<Category[]> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/events/categories`);
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, 'categories');
+    }
+  },
+
+  /**
+   * Get all tags
+   */
+  getTags: async (): Promise<Tag[]> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/events/tags`);
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, 'tags');
+    }
+  },
+
+  /**
+   * Get recommended trips
+   */
+  getRecommendedTrips: async (): Promise<RecommendedTrip[]> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/recommended-trips`);
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, 'recommended-trips');
     }
   },
 };
