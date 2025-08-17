@@ -44,17 +44,7 @@ export default function Home() {
 
   // Fetch industries on mount
   useEffect(() => {
-    fetch('/api/events/industries')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new TypeError("Response is not JSON");
-        }
-        return res.json();
-      })
+    api.getIndustries()
       .then(data => setIndustries(data))
       .catch(error => {
         console.error('Error fetching industries:', error);
