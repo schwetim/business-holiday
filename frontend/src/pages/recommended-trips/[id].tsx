@@ -4,6 +4,7 @@ import { RecommendedTrip, Event, Accommodation, Flight } from '../../types'; // 
 import Link from 'next/link';
 import SuggestedAccommodationCard from '../../components/SuggestedAccommodationCard'; // Import the new component
 import SuggestedFlightCard from '../../components/SuggestedFlightCard'; // Import the new component
+import { api } from '../../services/api';
 
 const RecommendedTripDetailPage: React.FC = () => {
   const router = useRouter();
@@ -16,15 +17,8 @@ const RecommendedTripDetailPage: React.FC = () => {
   useEffect(() => {
     if (id) {
       setIsLoading(true);
-      // TODO: Use the API service for fetching
-      fetch(`/api/recommended-trips/${id}`)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then((data: RecommendedTrip) => {
+      api.getRecommendedTripById(id as string)
+        .then((data: RecommendedTrip | null) => {
           setRecommendedTrip(data);
           setError(null);
         })

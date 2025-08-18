@@ -275,4 +275,22 @@ export const api = {
       return handleApiError(error, 'recommended-trips');
     }
   },
+
+  /**
+   * Get recommended trip by ID
+   */
+  getRecommendedTripById: async (id: string | number): Promise<RecommendedTrip | null> => {
+    try {
+      const response = await fetch(`${getBaseUrl()}/api/recommended-trips/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error(`API returned status ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error, `recommended-trip/${id}`);
+    }
+  },
 };
